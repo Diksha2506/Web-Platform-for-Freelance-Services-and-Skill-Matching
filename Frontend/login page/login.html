@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SkillBridge | Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="page">
+    <div class="login-card">
+
+      <!-- Logo -->
+      <div class="logo">
+        ⚡ <span>Skill</span>Bridge
+      </div>
+      <p class="subtitle">Connect with top talent. Get things done.</p>
+
+      <!-- Role Toggle -->
+      <div class="role-toggle">
+        <button type="button" class="active" onclick="setRole('freelancer')">
+          Freelancer
+        </button>
+        <button type="button" onclick="setRole('client')">
+          Client
+        </button>
+      </div>
+
+      <!-- Hidden role value -->
+      <input type="hidden" id="loginRole" value="freelancer">
+
+
+      <!-- Login Form -->
+      <form onsubmit="loginUser(event)">
+        <div class="input-group">
+          <input type="email" id="loginEmail" placeholder="Email address" required />
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="loginPassword" placeholder="Password" required />
+        </div>
+
+        <div class="forgot">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="login-btn" type="submit">
+          Sign in as Freelancer
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>or continue with</span>
+      </div>
+
+      <!-- Social Login -->
+      <div class="social-login">
+        <button class="google">Google</button>
+        <button class="github">GitHub</button>
+      </div>
+
+      <p class="register">
+        New here? <a href="register.html">Create an account</a>
+      </p>
+
+    </div>
+  </div>
+
+ 
+    <script>
+  function setRole(role) {
+    document.getElementById("loginRole").value = role;
+
+    const buttons = document.querySelectorAll(".role-toggle button");
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    if (role === "freelancer") {
+      buttons[0].classList.add("active");
+    } else {
+      buttons[1].classList.add("active");
+    }
+  }
+</script>
+
+</body>
+</html>
