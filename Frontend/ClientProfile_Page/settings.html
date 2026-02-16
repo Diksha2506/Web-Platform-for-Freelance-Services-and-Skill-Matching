@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillSync - Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillSync</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li><button onclick="navigate('job-listings.html')">Job Listings</button></li>
+                <li><button onclick="navigate('messages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button class="active-btn">Settings</button>
+            <button onclick="navigate('help_Center.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Settings</h1>
+                <p>Manage your account preferences</p>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-card">
+            <h3>Account Settings</h3>
+
+            <label>Email</label>
+            <input type="email" value="diksha.rade24@vit.edu">
+
+            <label>Username</label>
+            <input type="text" value="diksha.rade24">
+
+            <button class="primary-btn" onclick="navigate()">
+                Update Account
+            </button>
+        </div>
+
+        <!-- Password Change -->
+        <div class="settings-card">
+            <h3>Change Password</h3>
+
+            <label>Current Password</label>
+            <input type="password">
+
+            <label>New Password</label>
+            <input type="password">
+
+            <label>Confirm New Password</label>
+            <input type="password">
+
+            <button class="primary-btn" onclick="navigate()">
+                Update Password
+            </button>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-card">
+            <h3>Notifications</h3>
+
+            <div class="toggle-row">
+                <span>Email Notifications</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-row">
+                <span>Push Notifications</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-row">
+                <span>Marketing Emails</span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="danger-zone">
+            <h3>Danger Zone</h3>
+            <p>Once you delete your account, there is no going back.</p>
+            <button class="delete-btn" onclick="navigate()">
+                Delete Account
+            </button>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

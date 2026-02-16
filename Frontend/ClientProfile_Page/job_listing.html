@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Job Listings</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li class="active"><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button onclick="navigate('help_Center.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Job Listings</h1>
+                <p>Find the perfect project or talent</p>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <input type="text" placeholder="Search jobs or skills..." class="search-input">
+            <button class="filter-btn">Filters</button>
+        </div>
+
+        <!-- 🔥 Dynamic Jobs Will Appear Here -->
+        <div id="jobContainer"></div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

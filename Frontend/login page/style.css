@@ -1,0 +1,169 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(120deg, #eaf6ff, #f6f0ff);
+}
+
+.page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  width: 380px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 30px 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo */
+.logo {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.logo span {
+  color: #2bb0a6;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 22px;
+}
+
+/* Role Toggle */
+.role-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.role-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #6b7280;
+}
+
+.role-toggle .active {
+  background: #2bb0a6;
+  color: #ffffff;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 14px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  border-color: #2bb0a6;
+}
+
+/* Forgot */
+.forgot {
+  text-align: right;
+  margin-bottom: 18px;
+}
+
+.forgot a {
+  font-size: 13px;
+  color: #2bb0a6;
+  text-decoration: none;
+}
+
+/* Login Button */
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(90deg, #2bb0a6, #35c9bb);
+  border: none;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(43, 176, 166, 0.35);
+}
+
+/* Divider */
+.divider {
+  text-align: center;
+  margin: 22px 0;
+  position: relative;
+}
+
+.divider span {
+  background: #ffffff;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: #e5e7eb;
+  z-index: -1;
+}
+
+/* Social Login */
+.social-login {
+  display: flex;
+  gap: 10px;
+}
+
+.social-login button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Register */
+.register {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.register a {
+  color: #2bb0a6;
+  font-weight: 500;
+  text-decoration: none;
+}

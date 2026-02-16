@@ -1,0 +1,162 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 40px;
+  z-index: 10;
+}
+
+.navbar nav a {
+  margin: 0 12px;
+  text-decoration: none;
+  color: #333;
+}
+
+.badge {
+  background: #e0f2f1;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+}
+
+.logout-btn {
+  margin-left: 15px;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 120px 20px;
+  background: linear-gradient(135deg, #020617, #0f172a);
+}
+
+.hero h1 span {
+  background: linear-gradient(to right, #22c55e, #eab308);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.pill {
+  display: inline-block;
+  background: #1e293b;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+/* BUTTONS */
+.primary-btn {
+  background: #10b981;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  background: transparent;
+  border: 1px solid #ccc;
+  padding: 12px 22px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+/* SECTIONS */
+.section {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.section.light {
+  background: #f8fafc;
+  color: #000;
+}
+
+.subtitle {
+  color: #64748b;
+  margin: 15px 0 40px;
+}
+
+/* CARDS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  padding: 25px;
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+/* JOIN */
+.join-box {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.join-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  width: 300px;
+}
+
+.join-card.outline {
+  border: 2px solid #fbbf24;
+}
+
+/* STEPS */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.step {
+  background: #1e293b;
+  padding: 20px 30px;
+  border-radius: 50px;
+}
+
+/* FOOTER */
+footer {
+  background: #020617;
+  padding: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 30px;
+}
+
+footer a {
+  display: block;
+  color: #94a3b8;
+  margin-top: 8px;
+}

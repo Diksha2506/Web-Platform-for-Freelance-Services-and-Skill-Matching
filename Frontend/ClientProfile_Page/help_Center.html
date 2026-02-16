@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Help & Support</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate()">Dashboard</button></li>
+                <li><button onclick="navigate()">Job Listings</button></li>
+                <li><button onclick="navigate()">Messages</button></li>
+                <li><button onclick="navigate()">Payments</button></li>
+                <li><button onclick="navigate()">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button class="active-btn">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Help & Support</h1>
+                <p>Get the help you need</p>
+            </div>
+        </div>
+
+        <div class="help-container">
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h3>Frequently Asked Questions</h3>
+
+                <div class="faq-item">
+                    <h4>How do I get started?</h4>
+                    <p>Sign up, complete your profile, and start browsing jobs or posting projects.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>How do payments work?</h4>
+                    <p>Payments are held in escrow until milestones are approved for both parties.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>Can I switch roles?</h4>
+                    <p>You can switch between client and freelancer roles from your dashboard settings.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h4>How are disputes resolved?</h4>
+                    <p>Our support team mediates disputes and ensures fair resolution based on agreements.</p>
+                </div>
+            </div>
+
+            <!-- Right Contact Options -->
+            <div class="support-options">
+
+                <div class="support-card">
+                    <h4>💬 Live Chat</h4>
+                    <p>Chat with our support team</p>
+                    <button class="primary-btn" onclick="navigate()">Start Chat</button>
+                </div>
+
+                <div class="support-card">
+                    <h4>📧 Email Us</h4>
+                    <p>support@SkillBridge.com</p>
+                    <button class="primary-btn" onclick="navigate()">Send Email</button>
+                </div>
+
+                <div class="support-card">
+                    <h4>📘 Documentation</h4>
+                    <p>Browse our knowledge base</p>
+                    <button class="primary-btn" onclick="navigate()">View Docs</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+            <h3>Contact Support</h3>
+
+            <label>Subject</label>
+            <input type="text" placeholder="What do you need help with?">
+
+            <label>Message</label>
+            <textarea rows="4" placeholder="Describe your issue..."></textarea>
+
+            <button class="primary-btn" onclick="navigate()">
+                Send Message
+            </button>
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Client Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li class="active"><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate()">Settings</button>
+            <button onclick="navigate()">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Client Dashboard</h1>
+                <p>Manage your projects and proposals</p>
+            </div>
+
+            <button class="primary-btn" onclick="navigate('create_job.html')">
+                + Post New Job
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="cards">
+            <div class="card">
+                <h4>Active Projects</h4>
+                <h2>3</h2>
+            </div>
+
+            <div class="card">
+                <h4>Pending Proposals</h4>
+                <h2>12</h2>
+            </div>
+
+            <div class="card">
+                <h4>Total Spent</h4>
+                <h2>$8,500</h2>
+            </div>
+
+            <div class="card">
+                <h4>Hired Freelancers</h4>
+                <h2>7</h2>
+            </div>
+        </div>
+
+        <!-- Jobs & Messages Section -->
+        <div class="grid-section">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>My Jobs</h3>
+                    <button onclick="navigate()">View All</button>
+                </div>
+
+                <div class="job-item">
+                    <h4>Full-Stack Web Application Development</h4>
+                    <span class="status">Active</span>
+                </div>
+
+                <div class="job-item">
+                    <h4>Mobile App UI/UX Design</h4>
+                    <span class="status">Active</span>
+                </div>
+
+                <div class="job-item">
+                    <h4>Content Writing for Tech Blog</h4>
+                    <span class="status">Active</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Messages</h3>
+                    <button onclick="navigate()">View All</button>
+                </div>
+
+                <div class="message-item">
+                    <h4>Alice Chen</h4>
+                    <p>Can we discuss the project timeline?</p>
+                </div>
+
+                <div class="message-item">
+                    <h4>Bob Martinez</h4>
+                    <p>I've submitted the revised mockups</p>
+                </div>
+
+                <div class="message-item">
+                    <h4>Carol Davis</h4>
+                    <p>Payment has been processed!</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

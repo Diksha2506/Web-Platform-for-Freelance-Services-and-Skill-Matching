@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li class="active"><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button onclick="navigate('help_Center.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Logout Top Right -->
+        <button class="logout-top" onclick="navigate('../login page/login.html')">Logout</button>
+
+        <div class="topbar">
+            <div>
+                <h1>Profile</h1>
+                <p>View and edit your profile information</p>
+            </div>
+        </div>
+
+        <div class="profile-container">
+
+            <!-- Left Profile Card -->
+            <div class="profile-card">
+                <div class="profile-avatar">D</div>
+                <h2>diksha.rade24</h2>
+                <p class="profile-role">Client</p>
+                <p class="profile-email">diksha.rade24@vit.edu</p>
+
+                <div class="profile-stats">
+                    <p>📍 San Francisco, CA</p>
+                    <p>⭐ 4.8 Rating</p>
+                    <p>📁 15 Projects Completed</p>
+                    <p>📅 Member since Jan 2025</p>
+                </div>
+            </div>
+
+            <!-- Right Edit Form -->
+            <div class="profile-form">
+
+                <h3>Edit Profile</h3>
+
+                <div class="form-row">
+                    <div>
+                        <label>Full Name</label>
+                        <input type="text" value="diksha.rade24">
+                    </div>
+
+                    <div>
+                        <label>Email</label>
+                        <input type="email" value="diksha.rade24@vit.edu">
+                    </div>
+                </div>
+
+                <label>Title</label>
+                <input type="text" value="Project Manager">
+
+                <label>Bio</label>
+                <textarea rows="4">
+Passionate about creating exceptional digital experiences. Experienced in modern web technologies.
+                </textarea>
+
+                <label>Skills</label>
+                <input type="text" value="React, TypeScript, Node.js, Figma">
+
+                <button class="save-btn" onclick="navigate()">Save Changes</button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

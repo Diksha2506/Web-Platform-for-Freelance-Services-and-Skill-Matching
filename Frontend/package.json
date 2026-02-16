@@ -1,0 +1,14 @@
+{
+  "name": "freelance-platform-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Web Platform for Freelance Services and Skill Matching",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "cors": "^2.8.6"
+  }
+}

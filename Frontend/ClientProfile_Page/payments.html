@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Payments</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')">Messages</button></li>
+                <li class="active"><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button onclick="navigate('help_Center.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Payments</h1>
+                <p>Manage your spending</p>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="payment-cards">
+
+            <div class="payment-card">
+                <h4>Total Spent</h4>
+                <h2>$7,800</h2>
+            </div>
+
+            <div class="payment-card">
+                <h4>In Escrow</h4>
+                <h2>$3,500</h2>
+            </div>
+
+            <div class="payment-card">
+                <h4>Pending</h4>
+                <h2>$2,000</h2>
+            </div>
+
+        </div>
+
+        <!-- Transaction History -->
+        <div class="transaction-panel">
+            <h3>Transaction History</h3>
+
+            <div class="transaction-item">
+                <div>
+                    <h4>Full-Stack Web App - Milestone 1</h4>
+                    <span>Jan 15, 2026</span>
+                </div>
+                <div class="transaction-right">
+                    <h4>$1,500</h4>
+                    <span class="status completed">Completed</span>
+                </div>
+            </div>
+
+            <div class="transaction-item">
+                <div>
+                    <h4>Mobile App Design</h4>
+                    <span>Jan 20, 2026</span>
+                </div>
+                <div class="transaction-right">
+                    <h4>$2,000</h4>
+                    <span class="status pending">Pending</span>
+                </div>
+            </div>
+
+            <div class="transaction-item">
+                <div>
+                    <h4>Content Writing - January</h4>
+                    <span>Feb 01, 2026</span>
+                </div>
+                <div class="transaction-right">
+                    <h4>$800</h4>
+                    <span class="status completed">Completed</span>
+                </div>
+            </div>
+
+            <div class="transaction-item">
+                <div>
+                    <h4>Dashboard Project - Milestone 2</h4>
+                    <span>Feb 05, 2026</span>
+                </div>
+                <div class="transaction-right">
+                    <h4>$3,500</h4>
+                    <span class="status escrow">In Escrow</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

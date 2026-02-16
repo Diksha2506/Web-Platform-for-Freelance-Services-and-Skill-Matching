@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Post New Job</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li class="active"><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button onclick="navigate('help_support.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Post New Job</h1>
+                <p>Create a new project and hire top talent</p>
+            </div>
+        </div>
+
+        <div class="job-form-card">
+
+            <form id="jobForm">
+
+    <!-- Job Title -->
+    <label>Job Title</label>
+    <input type="text" id="title" placeholder="e.g. Full Stack Web Developer" required>
+
+    <!-- Budget -->
+    <label>Budget Amount ($)</label>
+    <input type="number" id="budget" placeholder="Enter amount" required>
+
+    <!-- Description -->
+    <label>Job Description</label>
+    <textarea id="description" rows="5" placeholder="Describe the project in detail..." required></textarea>
+
+    <!-- Buttons -->
+    <div class="form-actions">
+        <button type="button" class="secondary-btn" onclick="navigate('dashboard.html')">
+            Cancel
+        </button>
+
+        <button type="submit" class="primary-btn">
+            Post Job
+        </button>
+    </div>
+
+</form>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

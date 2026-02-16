@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Messages</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+        <div class="user-info">
+            <p>Logged in as</p>
+            <h3>diksha.rade24</h3>
+            <span class="role">Client</span>
+        </div>
+
+        <nav>
+            <ul>
+                <li><button onclick="navigate('dashboard.html')">Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')">Job Listings</button></li>
+                <li class="active"><button onclick="navigate('massages.html')">Messages</button></li>
+                <li><button onclick="navigate('payments.html')">Payments</button></li>
+                <li><button onclick="navigate('profile.html')">Profile</button></li>
+            </ul>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')">Settings</button>
+            <button onclick="navigate('help_Center.html')">Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Messages</h1>
+                <p>Chat with clients and freelancers</p>
+            </div>
+        </div>
+
+        <div class="chat-container">
+
+            <!-- Left Conversation List -->
+            <div class="chat-list">
+                <input type="text" placeholder="Search conversations..." class="chat-search">
+
+                <div class="chat-user active-chat">
+                    <div class="avatar">AC</div>
+                    <div>
+                        <h4>Alice Chen</h4>
+                        <p>Can we discuss the project timeline?</p>
+                    </div>
+                </div>
+
+                <div class="chat-user">
+                    <div class="avatar">BM</div>
+                    <div>
+                        <h4>Bob Martinez</h4>
+                        <p>I've submitted the revised mockups</p>
+                    </div>
+                </div>
+
+                <div class="chat-user">
+                    <div class="avatar">CD</div>
+                    <div>
+                        <h4>Carol Davis</h4>
+                        <p>Payment has been processed!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Chat Window -->
+            <div class="chat-window">
+
+                <div class="chat-header">
+                    <h3>Alice Chen</h3>
+                    <span class="online">Online</span>
+                </div>
+
+                <div class="chat-messages">
+
+                    <div class="message received">
+                        Hey, I reviewed the latest deliverables.
+                        <span>10:15 AM</span>
+                    </div>
+
+                    <div class="message sent">
+                        Great! Any feedback on the design changes?
+                        <span>10:18 AM</span>
+                    </div>
+
+                    <div class="message received">
+                        Can we discuss the project timeline?
+                        <span>10:30 AM</span>
+                    </div>
+
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" placeholder="Type a message...">
+                    <button onclick="navigate()">➤</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
