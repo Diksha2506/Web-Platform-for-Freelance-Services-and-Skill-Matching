@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>SkillBridge - Client Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script defer src="script.js"></script>
 </head>
 <body>
@@ -14,25 +21,30 @@
     <aside class="sidebar">
         <h2 class="logo">⚡ SkillBridge</h2>
 
-        <div class="user-info">
-            <p>Logged in as</p>
-            <h3>diksha.rade24</h3>
-            <span class="role">Client</span>
-        </div>
+    <div class="user-info">
+    <div class="user-avatar">
+        DR
+    </div>
+
+    <div class="user-details">
+        <span class="label">Logged in as</span>
+        <h3>diksha.rade24</h3>
+        <span class="role">Client</span>
+    </div>
+</div>
 
         <nav>
             <ul>
-                <li class="active"><button onclick="navigate('dashboard.html')">Dashboard</button></li>
-                <li><button onclick="navigate('job_listing.html')">Job Listings</button></li>
-                <li><button onclick="navigate('massages.html')">Messages</button></li>
-                <li><button onclick="navigate('payments.html')">Payments</button></li>
-                <li><button onclick="navigate('profile.html')">Profile</button></li>
-            </ul>
+                <li class="active"><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i></i> Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
+                <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                <li><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
         </nav>
 
         <div class="bottom-links">
-            <button onclick="navigate()">Settings</button>
-            <button onclick="navigate()">Help & Support</button>
+            <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+            <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
         </div>
     </aside>
 
@@ -73,13 +85,28 @@
             </div>
         </div>
 
+        <!-- Charts Section -->
+        <div class="charts-section">
+
+            <div class="chart-card">
+                <h3>Spending Trend</h3>
+                <canvas id="spendingChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>Projects Overview</h3>
+                <canvas id="projectsChart"></canvas>
+            </div>
+
+        </div>
+
         <!-- Jobs & Messages Section -->
         <div class="grid-section">
 
             <div class="panel">
                 <div class="panel-header">
                     <h3>My Jobs</h3>
-                    <button onclick="navigate()">View All</button>
+                    <button>View All</button>
                 </div>
 
                 <div class="job-item">
@@ -101,7 +128,7 @@
             <div class="panel">
                 <div class="panel-header">
                     <h3>Recent Messages</h3>
-                    <button onclick="navigate()">View All</button>
+                    <button>View All</button>
                 </div>
 
                 <div class="message-item">
@@ -125,6 +152,58 @@
     </main>
 
 </div>
+
+<script>
+    // Spending Line Chart
+    const ctx1 = document.getElementById('spendingChart');
+
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Amount Spent ($)',
+                data: [1000, 1500, 1200, 2000, 1800, 2500],
+                borderColor: '#1abc9c',
+                backgroundColor: 'rgba(26,188,156,0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // Projects Bar Chart
+    const ctx2 = document.getElementById('projectsChart');
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['Active', 'Completed', 'Pending'],
+            datasets: [{
+                label: 'Projects',
+                data: [3, 15, 5],
+                backgroundColor: ['#1abc9c', '#3498db', '#f39c12']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+
 
 </body>
 </html>
