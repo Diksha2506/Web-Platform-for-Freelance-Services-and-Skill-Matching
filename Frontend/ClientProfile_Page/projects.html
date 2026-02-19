@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkillSync - My Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2 class="logo">⚡ SkillBridge</h2>
+
+    <div class="user-info">
+    <div class="user-avatar">
+        DR
+    </div>
+
+    <div class="user-details">
+        <span class="label">Logged in as</span>
+        <h3>diksha.rade24</h3>
+        <span class="role">Client</span>
+    </div>
+</div>
+
+        <nav>
+            <ul>
+                <li ><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                <li><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i></i> Job Listings</button></li>
+                <li><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
+                <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                <li class="active"><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                <li><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+        </nav>
+
+        <div class="bottom-links">
+            <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+            <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>My Projects</h1>
+                <p>Manage and track all your posted projects</p>
+            </div>
+
+            <button class="primary-btn">
+                + Post New Project
+            </button>
+        </div>
+
+        <!-- Projects List -->
+        <div class="projects-list">
+
+    <!-- Active Project -->
+    <div class="project-item">
+        <div class="project-left">
+            <h3>Full Stack Web Application</h3>
+            <p>Develop a complete web app using React & Node.js.</p>
+            <div class="project-info">
+                <span>Budget: $5,000</span>
+                <span>Proposals: 12</span>
+                <span>Deadline: 25 Feb 2026</span>
+            </div>
+        </div>
+
+        <div class="project-right">
+            <span class="status active">Active</span>
+            <div class="project-actions">
+                <button class="secondary-btn">View</button>
+                <button class="primary-btn">Manage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Project -->
+    <div class="project-item">
+        <div class="project-left">
+            <h3>Mobile App UI/UX Design</h3>
+            <p>Design clean mobile UI with modern UX standards.</p>
+            <div class="project-info">
+                <span>Budget: $2,500</span>
+                <span>Completed: 10 Jan 2026</span>
+            </div>
+        </div>
+
+        <div class="project-right">
+            <span class="status completed">Completed</span>
+            <div class="project-actions">
+                <button class="secondary-btn">View</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    </main>
+
+</div>
+
+</body>
+</html>
