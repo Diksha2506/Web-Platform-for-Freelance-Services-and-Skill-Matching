@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SkillBridge - Project Details</title>
@@ -11,215 +12,208 @@
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- ================= SIDEBAR ================= -->
-    <aside class="sidebar">
-        <h2 class="logo">⚡ SkillBridge</h2>
+        <!-- ================= SIDEBAR ================= -->
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
 
-        <div class="user-info">
-            <div class="user-avatar">DR</div>
-            <div class="user-details">
-                <span class="label">Logged in as</span>
-                <h3>diksha.rade24</h3>
-                <span class="role">Client</span>
-            </div>
-        </div>
-
-        <nav>
-            <ul>
-                <li><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                <li><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
-                <li><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
-                <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
-                <li class="active"><button><i class="fas fa-diagram-project"></i> Projects</button></li>
-            </ul>
-        </nav>
-
-        <div class="bottom-links">
-            <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
-            <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
-        </div>
-    </aside>
-
-    <!-- ================= MAIN ================= -->
-    <main class="main">
-
-        <!-- HEADER -->
-        <div class="topbar">
-            <div class="topbar-left">
-                <h1>Full Stack Web Application</h1>
-                <p>Monitor progress, manage tasks and coordinate freelancers</p>
-            </div>
-
-            <div class="topbar-right">
-                <button class="secondary-btn" onclick="openAllotModal()">
-                    <i class="fas fa-user-plus"></i> Allot Task
-                </button>
-                <button class="primary-btn">
-                    <i class="fas fa-video"></i> Take a Meet
-                </button>
-            </div>
-        </div>
-
-        <!-- SUMMARY -->
-        <div class="project-summary">
-
-            <div class="summary-card">
-                <span>Status</span>
-                <h3><span class="status-badge active">Active</span></h3>
-            </div>
-
-            <div class="summary-card">
-                <span>Deadline</span>
-                <h3>30 Mar 2026</h3>
-            </div>
-
-            <div class="summary-card">
-                <span>Planned Hours</span>
-                <h3>40 hrs</h3>
-            </div>
-
-            <div class="summary-card">
-                <span>Progress</span>
-                <h3>45%</h3>
-            </div>
-
-        </div>
-
-        <!-- PROGRESS -->
-        <div class="panel clean-panel">
-            <h3>Project Progress</h3>
-
-            <div class="progress-container">
-                <div class="progress-fill" style="width:45%"></div>
-            </div>
-
-            <p class="progress-text">45% Completed</p>
-        </div>
-
-        <!-- DESCRIPTION -->
-        <div class="panel clean-panel">
-            <h3>Project Description</h3>
-            <p class="project-description">
-                Build a scalable full stack web application using React, Node.js and PostgreSQL.
-                Includes authentication system, dashboard analytics, task management and payment integration.
-            </p>
-        </div>
-
-        <!-- TASKS -->
-        <div class="panel clean-panel">
-            <h3>All Assigned Tasks</h3>
-
-            <div class="task-item">
-                <div>
-                    <strong>Frontend Layout Setup</strong>
-                    <p>Assigned to Rahul Sharma • 02 Feb 2026</p>
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>diksha.rade24</h3>
+                    <span class="role">Client</span>
                 </div>
-                <span>2 hrs</span>
             </div>
 
-            <div class="task-item">
-                <div>
-                    <strong>Database Schema Design</strong>
-                    <p>Assigned to Anjali Verma • 05 Feb 2026</p>
-                </div>
-                <span>3 hrs</span>
+            <nav>
+                <ul>
+                    <li class=""><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i>
+                            Dashboard</button></li>
+                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job
+                            Listings</button></li>
+                    <li class=""><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i>
+                            Messages</button></li>
+                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i>
+                            Payments</button></li>
+                    <li class="active"><button onclick="navigate('projects.html')"><i class="fas fa-user"></i>
+                            Projects</button></li>
+                    <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="bottom-links">
+                <button class="" onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help &
+                    Support</button>
             </div>
+        </aside>
 
-        </div>
+        <!-- ================= MAIN ================= -->
+        <main class="main">
 
-    </main>
-
-</div>
-
-
-<!-- ================= ALLOT TASK MODAL ================= -->
-
-<div id="allotModal" class="modal-overlay">
-
-    <div class="modal-card">
-
-        <!-- STEP 1 -->
-        <div id="freelancerStep">
-
-            <h3>Select Freelancer</h3>
-
-            <div class="freelancer-list">
-
-                <div class="freelancer-item" onclick="selectFreelancer('Rahul Sharma')">
-                    <div class="avatar-small">RS</div>
-                    <div>
-                        <strong>Rahul Sharma</strong>
-                        <p>Frontend Developer</p>
-                    </div>
+            <!-- HEADER -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1>Full Stack Web Application</h1>
+                    <p>Monitor progress, manage tasks and coordinate freelancers</p>
                 </div>
 
-                <div class="freelancer-item" onclick="selectFreelancer('Anjali Verma')">
-                    <div class="avatar-small">AV</div>
-                    <div>
-                        <strong>Anjali Verma</strong>
-                        <p>Database Engineer</p>
-                    </div>
+                <div class="topbar-right">
+                    <button class="secondary-btn" onclick="openAllotModal()">
+                        <i class="fas fa-user-plus"></i> Allot Task
+                    </button>
+                    <button class="primary-btn" onclick="openMeetModal()">
+                        <i class="fas fa-video"></i> Take a Meet
+                    </button>
+                </div>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="project-summary">
+
+                <div class="summary-card">
+                    <span>Status</span>
+                    <h3><span class="status-badge active">Active</span></h3>
+                </div>
+
+                <div class="summary-card">
+                    <span>Deadline</span>
+                    <h3>30 Mar 2026</h3>
+                </div>
+
+                <div class="summary-card">
+                    <span>Planned Hours</span>
+                    <h3>40 hrs</h3>
+                </div>
+
+                <div class="summary-card">
+                    <span>Progress</span>
+                    <h3>45%</h3>
                 </div>
 
             </div>
 
-            <div class="form-actions">
-                <button class="secondary-btn" onclick="closeAllotModal()">Cancel</button>
+            <!-- PROGRESS -->
+            <div class="panel clean-panel">
+                <h3>Project Progress</h3>
+
+                <div class="progress-container">
+                    <div class="progress-fill" style="width:45%"></div>
+                </div>
+
+                <p class="progress-text">45% Completed</p>
             </div>
 
-        </div>
-
-        <!-- STEP 2 -->
-        <div id="taskStep" style="display:none;">
-
-            <h3>Assign Task to <span id="selectedFreelancer"></span></h3>
-
-            <label>Task Title</label>
-            <input type="text" placeholder="Enter task title">
-
-            <label>Task Description</label>
-            <textarea rows="4" placeholder="Describe the task clearly..."></textarea>
-
-            <label>Deadline</label>
-            <input type="date">
-
-            <div class="form-actions">
-                <button class="secondary-btn" onclick="backToFreelancer()">Back</button>
-                <button class="primary-btn">Assign Task</button>
+            <!-- DESCRIPTION -->
+            <div class="panel clean-panel">
+                <h3>Project Description</h3>
+                <p class="project-description">
+                    Build a scalable full stack web application using React, Node.js and PostgreSQL.
+                    Includes authentication system, dashboard analytics, task management and payment integration.
+                </p>
             </div>
 
-        </div>
+            <!-- TASKS -->
+            <div id="projectTasks" class="panel clean-panel">
+                <h3>All Assigned Tasks</h3>
+                <p>Loading tasks...</p>
+            </div>
+
+        </main>
 
     </div>
 
-</div>
+
+    <!-- ================= ALLOT TASK MODAL ================= -->
+    <div id="allotModal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="taskStep">
+                <div class="modal-header">
+                    <h3>Allot New Task</h3>
+                    <button class="close-btn" onclick="closeAllotModal()">&times;</button>
+                </div>
+
+                <label>Select Freelancers (You can select multiple)</label>
+                <div class="freelancer-selection-grid">
+                    <div class="freelancer-chip" onclick="toggleSelection(this, 'Rahul Sharma')">
+                        <div class="avatar-small">RS</div>
+                        <span>Rahul (Frontend)</span>
+                    </div>
+                    <div class="freelancer-chip" onclick="toggleSelection(this, 'Anjali Verma')">
+                        <div class="avatar-small">AV</div>
+                        <span>Anjali (Database)</span>
+                    </div>
+                    <div class="freelancer-chip" onclick="toggleSelection(this, 'Karan Singh')">
+                        <div class="avatar-small">KS</div>
+                        <span>Karan (Backend)</span>
+                    </div>
+                </div>
+
+                <label>Task Title</label>
+                <input type="text" id="taskTitleInput" placeholder="Enter task title">
+
+                <label>Deadline</label>
+                <input type="date" id="taskDeadlineInput">
+
+                <label>Description</label>
+                <textarea id="taskDescInput" rows="3" placeholder="Describe the task..."></textarea>
+
+                <div class="form-actions">
+                    <button class="secondary-btn" onclick="closeAllotModal()">Cancel</button>
+                    <button class="primary-btn" onclick="submitTaskAllocation()">
+                        <i class="fas fa-check"></i> Allot Task
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TAKE A MEET MODAL ================= -->
+    <div id="meetModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Schedule Meeting</h3>
+                <button class="close-btn" onclick="closeMeetModal()">&times;</button>
+            </div>
+
+            <label>Meeting Topic</label>
+            <input type="text" id="meetTopic" placeholder="e.g. Weekly Sync, Sprint Planning">
+
+            <label>Timing</label>
+            <input type="datetime-local" id="meetTiming">
+
+            <label>Invite Freelancers</label>
+            <div class="freelancer-selection-grid">
+                <div class="freelancer-chip meet-chip" onclick="toggleSelection(this, 'Rahul Sharma')">
+                    <div class="avatar-small">RS</div>
+                    <span>Rahul</span>
+                </div>
+                <div class="freelancer-chip meet-chip" onclick="toggleSelection(this, 'Anjali Verma')">
+                    <div class="avatar-small">AV</div>
+                    <span>Anjali</span>
+                </div>
+            </div>
+
+            <label>Meeting Description</label>
+            <textarea id="meetDesc" rows="3" placeholder="Agenda or details..."></textarea>
+
+            <div class="form-actions">
+                <button class="secondary-btn" onclick="closeMeetModal()">Cancel</button>
+                <button class="primary-btn" onclick="submitMeeting()">
+                    <i class="fas fa-calendar-plus"></i> Schedule Meet
+                </button>
+            </div>
+        </div>
+    </div>
 
 
-<!-- ================= SCRIPT ================= -->
-
-<script>
-function openAllotModal(){
-    document.getElementById("allotModal").style.display="flex";
-}
-
-function closeAllotModal(){
-    document.getElementById("allotModal").style.display="none";
-    backToFreelancer();
-}
-
-function selectFreelancer(name){
-    document.getElementById("freelancerStep").style.display="none";
-    document.getElementById("taskStep").style.display="block";
-    document.getElementById("selectedFreelancer").innerText = name;
-}
-
-function backToFreelancer(){
-    document.getElementById("freelancerStep").style.display="block";
-    document.getElementById("taskStep").style.display="none";
-}
-</script>
+    <!-- ================= SCRIPT ================= -->
+    <script defer src="script.js"></script>
 
 </body>
+
 </html>

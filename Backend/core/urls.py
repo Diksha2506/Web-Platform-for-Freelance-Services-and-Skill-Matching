@@ -16,11 +16,18 @@ from .views import (
     MessageListCreateView,
     PaymentSummaryView,
     PaymentTransactionListView,
+    ProjectListCreateView,
+    ProjectDetailView,
+    TaskCreateView,
+    MeetingListCreateView,
+    SupportRequestCreateView,
+    FreelancerListView,
 )
 
 urlpatterns = [
     # Jobs & profile
     path("jobs/", JobListCreateView.as_view(), name="jobs"),
+    path("profile/freelancers/", FreelancerListView.as_view(), name="freelancer-list"),
     path("profile/<int:pk>/", ProfileDetailView.as_view(), name="profile"),
 
     # Auth
@@ -42,4 +49,11 @@ urlpatterns = [
     # Payments
     path("payments/summary/", PaymentSummaryView.as_view(), name="payments-summary"),
     path("payments/transactions/", PaymentTransactionListView.as_view(), name="payments-transactions"),
+    
+    # Projects
+    path("projects/", ProjectListCreateView.as_view(), name="projects"),
+    path("projects/<int:pk>/", ProjectDetailView.as_view(), name="project-detail"),
+    path("tasks/", TaskCreateView.as_view(), name="task-create"),
+    path("meetings/", MeetingListCreateView.as_view(), name="meeting-list-create"),
+    path("support/", SupportRequestCreateView.as_view(), name="support-create"),
 ]

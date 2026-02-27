@@ -1,8 +1,6 @@
 // ==== GLOBAL CONFIG & HELPERS ====
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
-const ACCESS_TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
 
 // TEMP: set this to the profile id for the logged-in user
 const PROFILE_ID = 1;
@@ -11,32 +9,36 @@ function navigate(page) {
     window.location.href = page;
 }
 
-// Store tokens (call this from your login page JS after /auth/login/)
-function setTokens(access, refresh) {
-    localStorage.setItem(ACCESS_TOKEN_KEY, access);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
+// No localStorage tokens used — backend uses HttpOnly cookies.
+function setTokens() {
+    // no-op
 }
 
 function clearTokens() {
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    // no-op (cookies cleared server-side on logout)
 }
 
-function getAccessToken() {
-    return localStorage.getItem(ACCESS_TOKEN_KEY);
+// Selection helper for chips
+let selectedPeople = [];
+
+function toggleSelection(el, name) {
+    el.classList.toggle("active");
+    if (el.classList.contains("active")) {
+        selectedPeople.push(name);
+    } else {
+        selectedPeople = selectedPeople.filter((p) => p !== name);
+    }
 }
 
 function getAuthHeaders() {
-    const token = getAccessToken();
-    const headers = { "Content-Type": "application/json" };
-    if (token) headers["Authorization"] = `Bearer ${token}`;
-    return headers;
+    return { "Content-Type": "application/json" };
 }
 
 async function apiGet(path) {
     const res = await fetch(`${API_BASE_URL}${path}`, {
         method: "GET",
         headers: getAuthHeaders(),
+        credentials: "include",
     });
     if (!res.ok) throw new Error(`GET ${path} failed with ${res.status}`);
     return res.json();
@@ -46,24 +48,63 @@ async function apiPost(path, body) {
     const res = await fetch(`${API_BASE_URL}${path}`, {
         method: "POST",
         headers: getAuthHeaders(),
+        credentials: "include",
         body: JSON.stringify(body),
     });
     if (!res.ok) throw new Error(`POST ${path} failed with ${res.status}`);
-    return res.json();
+    // some endpoints return no body
+    const text = await res.text();
+    try {
+        return JSON.parse(text || "{}");
+    } catch (e) {
+        return {};
+    }
 }
 
-// Optional: logout button handler (clear tokens + redirect to login)
-async function handleLogout() {
-    const refresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-    if (refresh) {
-        try {
-            await apiPost("/auth/logout/", { refresh });
-        } catch (e) {
-            console.error("Logout API error (ignored):", e);
-        }
+// ==== SUPPORT REQUEST (help_Center.html) ====
+
+async function submitSupportRequest(event) {
+    if (event) event.preventDefault();
+
+    const subjectEl = document.querySelector('.contact-form input[type="text"]');
+    const messageEl = document.querySelector('.contact-form textarea');
+
+    if (!subjectEl || !messageEl) return;
+
+    const body = {
+        subject: subjectEl.value,
+        message: messageEl.value
+    };
+
+    if (!body.subject || !body.message) {
+        alert("Please fill in both subject and message.");
+        return;
     }
-    clearTokens();
-    window.location.href = "../login page/login.html";
+
+    try {
+        await apiPost("/support/", body);
+        alert("Support request sent successfully!");
+        subjectEl.value = "";
+        messageEl.value = "";
+    } catch (err) {
+        console.error("Failed to send support request:", err);
+        alert("Failed to send support request. Please try again.");
+    }
+}
+
+// Logout: call backend to clear cookies and redirect to login
+async function handleLogout() {
+    try {
+        await fetch(`${API_BASE_URL}/auth/logout/`, {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+        });
+    } catch (e) {
+        console.error("Logout request failed:", e);
+    }
+    // Redirect to login (frontend served path)
+    window.location.href = "/login/login.html";
 }
 
 // ==== JOB LISTING + CREATE JOB (job_listing.html, create_job.html) ====
@@ -89,8 +130,9 @@ async function loadJobs() {
           </div>
           <p class="description">${job.description}</p>
           <div class="job-footer">
-            <span>Posted just now • Fixed Price • Remote</span>
-            <button class="apply-btn">Apply</button>
+            <span><i class="fas fa-clock"></i> ${job.job_type}</span>
+            <span><i class="fas fa-layer-group"></i> ${job.experience_level}</span>
+            <button class="primary-btn" onclick="navigate('project-details.html?id=${job.id}')">View Details</button>
           </div>
         </div>
       `;
@@ -100,26 +142,305 @@ async function loadJobs() {
     }
 }
 
-// Post job form (create_job.html)
-function initCreateJobForm() {
-    const form = document.getElementById("jobForm");
-    if (!form) return;
+async function initCreateJobForm() {
+    const jobForm = document.getElementById("jobForm");
+    if (!jobForm) return;
 
-    form.addEventListener("submit", async function (e) {
+    jobForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const title = document.getElementById("title").value;
-        const description = document.getElementById("description").value;
-        const budget = document.getElementById("budget").value;
+        const formData = new FormData(jobForm);
+        const body = Object.fromEntries(formData.entries());
+        body.remote_allowed = jobForm.remote_allowed.checked;
 
         try {
-            await apiPost("/jobs/", { title, description, budget });
-            alert("Job Posted Successfully 🚀");
+            await apiPost("/jobs/", body);
+            alert("Job posted successfully!");
             navigate("job_listing.html");
-        } catch (error) {
-            console.error("Error posting job:", error);
-            alert("Failed to post job");
+        } catch (err) {
+            console.error("Failed to post job:", err);
+            alert("Error posting job.");
         }
     });
+}
+
+// ==== PROJECTS (projects.html, create_project.html) ====
+
+async function loadProjects() {
+    try {
+        const projects = await apiGet("/projects/");
+        const container = document.getElementById("projectList");
+        if (!container) return;
+
+        container.innerHTML = "";
+        if (projects.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No projects found. Post your first project to get started!</p>
+                </div>
+            `;
+            return;
+        }
+
+        projects.forEach((proj) => {
+            const statusClass = (proj.status || "active").toLowerCase().replace(' ', '-');
+            container.innerHTML += `
+                <div class="project-item">
+                    <div class="project-left">
+                        <h3>${proj.title}</h3>
+                        <p>${proj.description.substring(0, 150)}${proj.description.length > 150 ? "..." : ""}</p>
+                        <div class="project-info">
+                            <span><i class="fas fa-tasks"></i> ${proj.tasks ? proj.tasks.length : 0} Tasks</span>
+                            <span><i class="fas fa-calendar"></i> Due: ${new Date(proj.deadline).toLocaleDateString()}</span>
+                            <span><i class="fas fa-chart-line"></i> ${proj.progress || 0}% Progress</span>
+                        </div>
+                    </div>
+                    <div class="project-right">
+                        <span class="status ${statusClass}">${proj.status || "Active"}</span>
+                        <div class="project-actions">
+                            <button class="primary-btn" onclick="navigate('project-details.html?id=${proj.id}')">Manage</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (e) {
+        console.error("Failed to load projects:", e);
+    }
+}
+
+async function initCreateProjectForm() {
+    const projectForm = document.getElementById("projectForm");
+    if (!projectForm) return;
+
+    projectForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const projectData = {
+            title: document.getElementById("proj_title").value,
+            description: document.getElementById("proj_description").value,
+            deadline: document.getElementById("proj_deadline").value,
+            planned_hours: parseInt(document.getElementById("proj_hours").value),
+        };
+
+        try {
+            await apiPost("/projects/", projectData);
+            alert("Project Created Successfully 🚀");
+            navigate("projects.html");
+        } catch (error) {
+            console.error("Error creating project:", error);
+            alert("Failed to create project. Please check if all fields are valid.");
+        }
+    });
+}
+
+// ==== PROJECT DETAILS (project-details.html) ====
+
+// ==== PROJECT DETAILS MODALS & DATA ====
+
+function openAllotModal() {
+    selectedPeople = [];
+    document.querySelectorAll('.freelancer-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById("allotModal").style.display = "flex";
+}
+
+function closeAllotModal() {
+    document.getElementById("allotModal").style.display = "none";
+}
+
+function openMeetModal() {
+    selectedPeople = [];
+    document.querySelectorAll('.meet-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById("meetModal").style.display = "flex";
+}
+
+function closeMeetModal() {
+    document.getElementById("meetModal").style.display = "none";
+}
+
+async function loadFreelancers() {
+    try {
+        const freelancers = await apiGet("/profile/freelancers/");
+        const taskGrid = document.querySelector("#allotModal .freelancer-selection-grid");
+        const meetGrid = document.querySelector("#meetModal .freelancer-selection-grid");
+
+        if (taskGrid) {
+            taskGrid.innerHTML = freelancers.map(f => `
+                <div class="freelancer-chip" onclick="toggleSelection(this, '${f.full_name}')">
+                    <div class="avatar-small">${(f.full_name || "??").substring(0, 2).toUpperCase()}</div>
+                    <span>${f.full_name} (${f.title || 'Freelancer'})</span>
+                </div>
+            `).join("");
+        }
+
+        if (meetGrid) {
+            meetGrid.innerHTML = freelancers.map(f => `
+                <div class="freelancer-chip meet-chip" onclick="toggleSelection(this, '${f.full_name}')">
+                    <div class="avatar-small">${(f.full_name || "??").substring(0, 2).toUpperCase()}</div>
+                    <span>${f.full_name}</span>
+                </div>
+            `).join("");
+        }
+    } catch (e) {
+        console.error("Failed to load freelancers:", e);
+    }
+}
+
+async function submitTaskAllocation() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get("id");
+    const title = document.getElementById("taskTitleInput").value;
+    const deadline = document.getElementById("taskDeadlineInput").value;
+    const desc = document.getElementById("taskDescInput").value;
+
+    if (!title || selectedPeople.length === 0 || !deadline) {
+        alert("Please fill title, select at least one freelancer, and set a deadline.");
+        return;
+    }
+
+    const taskData = {
+        project: projectId,
+        title: title,
+        description: desc,
+        due_date: deadline,
+        assigned_to: selectedPeople.join(", "),
+        hours: 0,
+    };
+
+    try {
+        await apiPost("/tasks/", taskData);
+        alert("Task Allotted Successfully!");
+        closeAllotModal();
+        location.reload();
+    } catch (e) {
+        console.error("Task allocation failed:", e);
+        alert("Failed to allot task.");
+    }
+}
+
+async function submitMeeting() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get("id");
+    const topic = document.getElementById("meetTopic").value;
+    const timing = document.getElementById("meetTiming").value;
+    const desc = document.getElementById("meetDesc").value;
+
+    if (!topic || !timing || selectedPeople.length === 0) {
+        alert("Please fill topic, timing, and invite at least one freelancer.");
+        return;
+    }
+
+    const meetData = {
+        project: projectId,
+        topic: topic,
+        timing: timing,
+        description: desc,
+        attendees: selectedPeople.join(", "),
+    };
+
+    try {
+        await apiPost("/meetings/", meetData);
+        alert("Meeting Scheduled Successfully!");
+        closeMeetModal();
+        location.reload();
+    } catch (e) {
+        console.error("Meeting scheduling failed:", e);
+        alert("Failed to schedule meeting.");
+    }
+}
+
+async function initProjectDetailsPage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get("id");
+    if (!projectId) return;
+
+    // Attach globals to window so HTML can call them
+    window.openAllotModal = openAllotModal;
+    window.closeAllotModal = closeAllotModal;
+    window.openMeetModal = openMeetModal;
+    window.closeMeetModal = closeMeetModal;
+    window.toggleSelection = toggleSelection;
+    window.submitTaskAllocation = submitTaskAllocation;
+    window.submitMeeting = submitMeeting;
+
+    // Load freelancers for modals
+    await loadFreelancers();
+
+    try {
+        const project = await apiGet(`/projects/${projectId}/`);
+
+        // Update basic info
+        const titleEl = document.querySelector(".topbar-left h1");
+        const descEl = document.querySelector(".project-description");
+        const statusEl = document.querySelector(".status-badge");
+        const deadlineEl = document.querySelectorAll(".summary-card h3")[1];
+        const hoursEl = document.querySelectorAll(".summary-card h3")[2];
+        const progressEl = document.querySelectorAll(".summary-card h3")[3];
+        const progressFill = document.querySelector(".progress-fill");
+        const progressText = document.querySelector(".progress-text");
+
+        if (titleEl) titleEl.textContent = project.title;
+        if (descEl) descEl.textContent = project.description;
+        if (statusEl) {
+            statusEl.textContent = project.status;
+            statusEl.className = `status-badge ${project.status.toLowerCase().replace(" ", "-")}`;
+        }
+        if (deadlineEl) deadlineEl.textContent = project.deadline;
+        if (hoursEl) hoursEl.textContent = `${project.planned_hours} hrs`;
+        if (progressEl) progressEl.textContent = `${project.progress}%`;
+        if (progressFill) progressFill.style.width = `${project.progress}%`;
+        if (progressText) progressText.textContent = `${project.progress}% Completed`;
+
+        // Load tasks and meetings
+        const taskContainer = document.getElementById("projectTasks");
+        if (taskContainer && project.tasks) {
+            // Clear "Loading..."
+            taskContainer.innerHTML = "<h3>All Assigned Tasks</h3>";
+
+            if (project.tasks.length === 0) {
+                taskContainer.innerHTML += "<p>No tasks assigned yet.</p>";
+            } else {
+                project.tasks.forEach((t) => {
+                    taskContainer.innerHTML += `
+                        <div class="task-item">
+                            <div>
+                                <strong>${t.title}</strong>
+                                <p>Assigned to ${t.assigned_to} • ${t.due_date}</p>
+                            </div>
+                            <span>${t.hours} hrs</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Handle meetings panel
+            let meetContainer = document.getElementById("projectMeetings");
+            if (!meetContainer) {
+                meetContainer = document.createElement("div");
+                meetContainer.id = "projectMeetings";
+                meetContainer.className = "panel clean-panel";
+                taskContainer.parentNode.insertBefore(meetContainer, taskContainer);
+            }
+
+            meetContainer.innerHTML = "<h3>Upcoming Meetings</h3>";
+            if (!project.meetings || project.meetings.length === 0) {
+                meetContainer.innerHTML += "<p>No meetings scheduled.</p>";
+            } else {
+                project.meetings.forEach((m) => {
+                    const time = new Date(m.timing).toLocaleString();
+                    meetContainer.innerHTML += `
+                        <div class="task-item" style="border-left: 4px solid #3b82f6; padding-left: 15px;">
+                            <div>
+                                <strong>${m.topic}</strong>
+                                <p>Attendees: ${m.attendees} • ${time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+    } catch (e) {
+        console.error("Failed to load project details:", e);
+    }
 }
 
 // ==== DASHBOARD (dashboard.html) ====
@@ -410,7 +731,25 @@ async function initSettingsPage() {
 
 // ==== ROUTER: RUN PAGE-SPECIFIC INITIALIZERS ====
 
+async function initSidebar() {
+    try {
+        const me = await apiGet("/auth/me/");
+        const avatar = document.querySelector(".user-avatar");
+        const name = document.querySelector(".user-details h3");
+        const roleDisp = document.querySelector(".user-details .role");
+
+        if (avatar) avatar.textContent = (me.first_name || me.username || "").substring(0, 2).toUpperCase();
+        if (name) name.textContent = me.full_name || me.username;
+        if (roleDisp && me.profile) {
+            roleDisp.textContent = me.profile.role.charAt(0).toUpperCase() + me.profile.role.slice(1);
+        }
+    } catch (e) {
+        // Not logged in or error
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    initSidebar();
     const path = window.location.pathname;
 
     if (path.endsWith("dashboard.html")) {
@@ -427,6 +766,12 @@ document.addEventListener("DOMContentLoaded", () => {
         initPaymentsPage();
     } else if (path.endsWith("settings.html")) {
         initSettingsPage();
+    } else if (path.endsWith("projects.html")) {
+        loadProjects();
+    } else if (path.endsWith("create_project.html")) {
+        initCreateProjectForm();
+    } else if (path.endsWith("project-details.html")) {
+        initProjectDetailsPage();
     }
 });
 

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Job, Profile, Message, Payment
+from .models import Job, Profile, Message, Payment, Project, Task, Meeting, SupportRequest
 
 
 User = get_user_model()
@@ -24,9 +24,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     password_confirm = serializers.CharField(write_only=True, min_length=8)
 
+    role = serializers.CharField(write_only=True, required=False, default='freelancer')
+
     class Meta:
         model = User
-        fields = ("username", "email", "password", "password_confirm")
+        fields = ("username", "email", "password", "password_confirm", "role")
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password_confirm"]:
@@ -35,11 +37,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         password = validated_data.pop("password")
+        role = validated_data.pop("role", "freelancer")
         validated_data.pop("password_confirm")
         user = User(**validated_data)
         user.set_password(password)
         user.save()
-        # optionally create empty profile
+        # Create profile with correct role
         Profile.objects.get_or_create(
             user=user,
             defaults={
@@ -47,6 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
                 "title": "",
                 "bio": "",
                 "skills": "",
+                "role": role,
             },
         )
         return user
@@ -109,3 +113,35 @@ class DashboardSummarySerializer(serializers.Serializer):
     total_spent = serializers.DecimalField(max_digits=12, decimal_places=2)
     hired_freelancers = serializers.IntegerField()
 
+
+class SupportRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupportRequest
+        fields = "__all__"
+
+
+class SupportRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SupportRequest
+        fields = "__all__"
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = "__all__"
+
+
+class MeetingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meeting
+        fields = "__all__"
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True, read_only=True)
+    meetings = MeetingSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = "__all__"

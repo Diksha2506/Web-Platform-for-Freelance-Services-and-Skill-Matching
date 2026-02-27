@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>SkillBridge | Sign Up</title>
@@ -8,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
   <div class="page">
@@ -21,6 +23,7 @@
 
       <!-- Role Toggle -->
       <div class="role-toggle">
+        <div class="slider"></div>
         <button type="button" class="active" onclick="setRole('freelancer')">
           Freelancer
         </button>
@@ -35,50 +38,30 @@
 
       <form onsubmit="registerUser(event)">
 
-  <!-- Username -->
-  <div class="input-group">
-    <input
-      type="text"
-      id="username"
-      placeholder="Username"
-      required
-    />
-  </div>
+        <!-- Username -->
+        <div class="input-group">
+          <input type="text" id="username" placeholder="Username" required />
+        </div>
 
-  <!-- Email -->
-  <div class="input-group">
-    <input
-      type="email"
-      id="email"
-      placeholder="Email address"
-      required
-    />
-  </div>
+        <!-- Email -->
+        <div class="input-group">
+          <input type="email" id="email" placeholder="Email address" required />
+        </div>
 
-  <!-- Password -->
-  <div class="input-group">
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-      required
-    />
-  </div>
+        <!-- Password -->
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Password" required />
+        </div>
 
-  <!-- Confirm Password -->
-  <div class="input-group">
-    <input
-      type="password"
-      id="confirmPassword"
-      placeholder="Confirm password"
-      required
-    />
-  </div>
+        <!-- Confirm Password -->
+        <div class="input-group">
+          <input type="password" id="confirmPassword" placeholder="Confirm password" required />
+        </div>
 
-  <button class="login-btn" type="submit">
-    Create Account
-  </button>
-</form>
+        <button class="login-btn" type="submit">
+          Create Account
+        </button>
+      </form>
 
       <p class="register">
         Already have an account?
@@ -88,20 +71,8 @@
     </div>
   </div>
 
-  <script>
-  function setRole(role) {
-    document.getElementById("role").value = role;
-
-    const buttons = document.querySelectorAll(".role-toggle button");
-    buttons.forEach(btn => btn.classList.remove("active"));
-
-    if (role === "freelancer") {
-      buttons[0].classList.add("active");
-    } else {
-      buttons[1].classList.add("active");
-    }
-  }
-</script>
+  <script src="auth.js"></script>
 
 </body>
+
 </html>

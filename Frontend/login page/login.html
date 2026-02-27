@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>SkillBridge | Login</title>
@@ -8,62 +9,64 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="page">
-  <div class="login-card">
+  <div class="page">
+    <div class="login-card">
 
-    <div class="logo">⚡ <span>Skill</span>Bridge</div>
-    <p class="subtitle">Connect with top talent. Get things done.</p>
+      <div class="logo">⚡ <span>Skill</span>Bridge</div>
+      <p class="subtitle">Connect with top talent. Get things done.</p>
 
-    <!-- Role Toggle -->
-    <div class="role-toggle">
-      <button type="button" class="active" onclick="setRole('freelancer')">
-        Freelancer
-      </button>
-      <button type="button" onclick="setRole('client')">
-        Client
-      </button>
-    </div>
-
-    <!-- Hidden role -->
-    <input type="hidden" id="loginRole" value="freelancer">
-
-    <!-- Login Form -->
-    <form onsubmit="loginUser(event)">
-      <div class="input-group">
-        <input type="email" id="loginEmail" placeholder="Email address" required />
+      <!-- Role Toggle -->
+      <div class="role-toggle">
+        <div class="slider"></div>
+        <button type="button" class="active" onclick="setRole('freelancer')">
+          Freelancer
+        </button>
+        <button type="button" onclick="setRole('client')">
+          Client
+        </button>
       </div>
 
-      <div class="input-group">
-        <input type="password" id="loginPassword" placeholder="Password" required />
+      <!-- Hidden role -->
+      <input type="hidden" id="role" value="freelancer">
+
+      <!-- Login Form -->
+      <form onsubmit="loginUser(event)">
+        <div class="input-group">
+          <input type="text" id="loginUsername" placeholder="Username or email" required />
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="loginPassword" placeholder="Password" required />
+        </div>
+
+        <div class="forgot">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button class="login-btn" type="submit">
+          Sign in as Freelancer
+        </button>
+      </form>
+
+      <div class="divider">
+        <span>or continue with</span>
       </div>
 
-      <div class="forgot">
-        <a href="#">Forgot password?</a>
+      <div class="social-login">
+        <button class="google">Google</button>
+        <button class="github">GitHub</button>
       </div>
 
-      <button class="login-btn" type="submit">
-        Sign in as Freelancer
-      </button>
-    </form>
+      <p class="register">
+        New here? <a href="register.html">Create an account</a>
+      </p>
 
-    <div class="divider">
-      <span>or continue with</span>
     </div>
-
-    <div class="social-login">
-      <button class="google">Google</button>
-      <button class="github">GitHub</button>
-    </div>
-
-    <p class="register">
-      New here? <a href="register.html">Create an account</a>
-    </p>
-
   </div>
-</div>
   <script src="auth.js"></script>
 </body>
-</html>
 
+</html>

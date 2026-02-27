@@ -1,8 +1,11 @@
-// Register User
+const API_BASE = "http://127.0.0.1:8000/api";
+
+// Register User (calls Django REST register endpoint)
 async function registerUser(event) {
   event.preventDefault();
 
   const role = document.getElementById("role").value;
+  const username = document.getElementById("username").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
@@ -13,115 +16,113 @@ async function registerUser(event) {
   }
 
   try {
-    const response = await fetch("http://localhost:5000/register", {
+    const response = await fetch(`${API_BASE}/auth/register/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({
-        name: "Test User", // later replace with actual name input
+        username,
         email,
         password,
-        role
-      })
+        password_confirm: confirmPassword,
+        role,
+      }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
-      alert("Registration successful!");
+      // If client signed up, attempt auto-login (server sets HttpOnly cookies)
+      if (role === "client") {
+        try {
+          const loginRes = await fetch(`${API_BASE}/auth/login/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ username, password }),
+          });
+          if (loginRes.ok) {
+            window.location.href = "/client/dashboard.html";
+            return;
+          }
+        } catch (err) {
+          console.error("Auto-login failed:", err);
+        }
+      }
+      alert("Registration successful! Please sign in.");
       window.location.href = "login.html";
     } else {
-      alert(data.error || "Registration failed");
+      alert(data.detail || data.message || JSON.stringify(data));
     }
-
   } catch (error) {
     alert("Server error. Try again later.");
     console.error(error);
   }
 }
 
-// Login User
+// Login User (calls Django REST token endpoint)
 async function loginUser(event) {
   event.preventDefault();
 
-  const role = document.getElementById("loginRole").value;
-  const email = document.getElementById("loginEmail").value;
+  const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
+  const role = document.getElementById("role").value;
+
+  if (!username || !password) {
+    alert("Please fill all fields");
+    return;
+  }
 
   try {
-    const response = await fetch("http://localhost:5000/login", {
+    const response = await fetch(`${API_BASE}/auth/login/`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ username, password }),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
-      alert(role + " login successful!");
-
-      // role-based redirect (example)
-      if (role === "freelancer") {
-        window.location.href = "freelancer-dashboard.html";
+      // server sets HttpOnly cookies; redirect by role
+      if (role === "client") {
+        window.location.href = "/client/dashboard.html";
       } else {
-        window.location.href = "client-dashboard.html";
+        // Redirect to freelancer dashboard when implementated
+        window.location.href = "/freelancer/dashboard.html";
       }
-
     } else {
-      alert(data.message || "Invalid credentials");
+      const data = await response.json();
+      alert(data.detail || data.error || data.non_field_errors || JSON.stringify(data));
     }
-
   } catch (error) {
     alert("Server error. Try again later.");
     console.error(error);
   }
 }
 
-// Role toggle for login
+// Role toggle for login and register
 function setRole(role) {
-    document.getElementById("loginRole").value = role;
+  const roleInput = document.getElementById("role");
+  if (roleInput) roleInput.value = role;
 
-    const buttons = document.querySelectorAll(".role-toggle button");
-    buttons.forEach(btn => btn.classList.remove("active"));
+  const toggleContainer = document.querySelector(".role-toggle");
+  const buttons = document.querySelectorAll(".role-toggle button");
+  const loginBtn = document.querySelector(".login-btn");
 
-    const loginBtn = document.querySelector(".login-btn");
+  buttons.forEach((btn) => btn.classList.remove("active"));
 
-    if (role === "freelancer") {
-        buttons[0].classList.add("active");
-        loginBtn.textContent = "Sign in as Freelancer";
-    } else {
-        buttons[1].classList.add("active");
-        loginBtn.textContent = "Sign in as Client";
+  if (role === "freelancer") {
+    buttons[0].classList.add("active");
+    if (toggleContainer) toggleContainer.classList.remove("client-active");
+    if (loginBtn && window.location.pathname.includes("login.html")) {
+      loginBtn.textContent = "Sign in as Freelancer";
     }
-}
-
-function loginUser(event) {
-    event.preventDefault();
-
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-    const role = document.getElementById("loginRole").value;
-
-    if (!email || !password) {
-        alert("Please fill all fields");
-        return;
+  } else {
+    buttons[1].classList.add("active");
+    if (toggleContainer) toggleContainer.classList.add("client-active");
+    if (loginBtn && window.location.pathname.includes("login.html")) {
+      loginBtn.textContent = "Sign in as Client";
     }
-
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("role", role);
-
-    // ✅ Redirect based on role
-    if (role === "client") {
-        window.location.href = "/Frontend/ClientProfile_Page/dashboard.html";
-    } else {
-        window.location.href = "/Frontend/FreelancerProfile/dashboard.html"; //for freelancer
-    }
+  }
 }
 
 

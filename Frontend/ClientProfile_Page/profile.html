@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SkillBridge - Profile</title>
@@ -7,109 +8,108 @@
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h2 class="logo">⚡ SkillBridge</h2>
+                <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
 
-    <div class="user-info">
-    <div class="user-avatar">
-        DR
-    </div>
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>diksha.rade24</h3>
+                    <span class="role">Client</span>
+                </div>
+            </div>
 
-    <div class="user-details">
-        <span class="label">Logged in as</span>
-        <h3>diksha.rade24</h3>
-        <span class="role">Client</span>
-    </div>
-</div>
+            <nav>
+                <ul>
+                    <li class=""><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
+                    <li class=""><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
+                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                    <li class=""><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                    <li class="active"><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+                </ul>
+            </nav>
 
-        <nav>
-            <ul>
-                <li ><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                <li ><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i></i> Job Listings</button></li>
-                <li><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
-                <li><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
-                <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
-                <li class="active"><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
-        </nav>
+            <div class="bottom-links">
+                <button class="" onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
+            </div>
+        </aside>
 
-        <div class="bottom-links">
-            <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
-            <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
-        </div>
-    </aside>
+        <!-- Main -->
+        <main class="main">
 
-    <!-- Main -->
-    <main class="main">
-
-        <!-- Logout Top Right -->
-        <button class="logout-top" onclick="navigate('../login page/login.html')">Logout</button>
-
-        <div class="topbar">
+            <!-- Logout Top Right -->
+            <button class="logout-top" onclick="handleLogout()">Logout</button>
             <div>
-                <h1>Profile</h1>
-                <p>View and edit your profile information</p>
-            </div>
-        </div>
-
-        <div class="profile-container">
-
-            <!-- Left Profile Card -->
-            <div class="profile-card">
-                <div class="profile-avatar">D</div>
-                <h2>diksha.rade24</h2>
-                <p class="profile-role">Client</p>
-                <p class="profile-email">diksha.rade24@vit.edu</p>
-
-                <div class="profile-stats">
-                    <p>📍 San Francisco, CA</p>
-                    <p>⭐ 4.8 Rating</p>
-                    <p>📁 15 Projects Completed</p>
-                    <p>📅 Member since Jan 2025</p>
+                <div>
+                    <h1>Profile</h1>
+                    <p>View and edit your profile information</p>
                 </div>
             </div>
+            <br>
+            <div class="profile-container">
 
-            <!-- Right Edit Form -->
-            <div class="profile-form">
+                <!-- Left Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-avatar">D</div>
+                    <h2>diksha.rade24</h2>
+                    <p class="profile-role">Client</p>
+                    <p class="profile-email">diksha.rade24@vit.edu</p>
 
-                <h3>Edit Profile</h3>
-
-                <div class="form-row">
-                    <div>
-                        <label>Full Name</label>
-                        <input type="text" value="diksha.rade24">
-                    </div>
-
-                    <div>
-                        <label>Email</label>
-                        <input type="email" value="diksha.rade24@vit.edu">
+                    <div class="profile-stats">
+                        <p>📍 San Francisco, CA</p>
+                        <p>⭐ 4.8 Rating</p>
+                        <p>📁 15 Projects Completed</p>
+                        <p>📅 Member since Jan 2025</p>
                     </div>
                 </div>
 
-                <label>Title</label>
-                <input type="text" value="Project Manager">
+                <!-- Right Edit Form -->
+                <div class="profile-form">
 
-                <label>Bio</label>
-                <textarea rows="4">
+                    <h3>Edit Profile</h3>
+
+                    <div class="form-row">
+                        <div>
+                            <label>Full Name</label>
+                            <input type="text" value="diksha.rade24">
+                        </div>
+
+                        <div>
+                            <label>Email</label>
+                            <input type="email" value="diksha.rade24@vit.edu">
+                        </div>
+                    </div>
+
+                    <label>Title</label>
+                    <input type="text" value="Project Manager">
+
+                    <label>Bio</label>
+                    <textarea rows="4">
                     Passionate about creating exceptional digital experiences. Experienced in modern web technologies.
                 </textarea>
 
-                <label>Skills</label>
-                <input type="text" value="React, TypeScript, Node.js, Figma">
+                    <label>Skills</label>
+                    <input type="text" value="React, TypeScript, Node.js, Figma">
 
-                <button class="save-btn" onclick="navigate()">Save Changes</button>
+                    <button class="save-btn">Save Changes</button>
+
+                </div>
 
             </div>
 
-        </div>
+        </main>
 
-    </main>
-
-</div>
+    </div>
 
 </body>
+
 </html>

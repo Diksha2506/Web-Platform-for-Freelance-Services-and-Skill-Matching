@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>SkillBridge - Client Dashboard</title>
@@ -13,198 +14,208 @@
 
     <script defer src="script.js"></script>
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <h2 class="logo">⚡ SkillBridge</h2>
+                <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
 
-    <div class="user-info">
-    <div class="user-avatar">
-        DR
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>diksha.rade24</h3>
+                    <span class="role">Client</span>
+                </div>
+            </div>
+
+            <nav>
+                <ul>
+                    <li class="active"><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
+                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
+                    <li class=""><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
+                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                    <li class=""><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                    <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+                </ul>
+            </nav>
+
+            <div class="bottom-links">
+                <button class="" onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1>Client Dashboard</h1>
+                    <p>Manage your projects and proposals</p>
+                </div>
+
+                <div style="display:flex;gap:12px;align-items:center">
+                    <button class="primary-btn" onclick="navigate('create_job.html')">
+                        + Post New Job
+                    </button>
+                    <button class="primary-btn" style="background:#2ecc71;border-color:#2ecc71"
+                        onclick="navigate('create_project.html')">
+                        + Post New Project
+                    </button>
+                    <button class="primary-btn" style="background:#e74c3c;border-color:#e74c3c"
+                        onclick="handleLogout()">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="cards">
+                <div class="card">
+                    <h4>Active Projects</h4>
+                    <h2>3</h2>
+                </div>
+
+                <div class="card">
+                    <h4>Pending Proposals</h4>
+                    <h2>12</h2>
+                </div>
+
+                <div class="card">
+                    <h4>Total Spent</h4>
+                    <h2>$8,500</h2>
+                </div>
+
+                <div class="card">
+                    <h4>Hired Freelancers</h4>
+                    <h2>7</h2>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+
+                <div class="chart-card">
+                    <h3>Spending Trend</h3>
+                    <canvas id="spendingChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Projects Overview</h3>
+                    <canvas id="projectsChart"></canvas>
+                </div>
+
+            </div>
+
+            <!-- Jobs & Messages Section -->
+            <div class="grid-section">
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>My Jobs</h3>
+                        <button>View All</button>
+                    </div>
+
+                    <div class="job-item">
+                        <h4>Full-Stack Web Application Development</h4>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="job-item">
+                        <h4>Mobile App UI/UX Design</h4>
+                        <span class="status">Active</span>
+                    </div>
+
+                    <div class="job-item">
+                        <h4>Content Writing for Tech Blog</h4>
+                        <span class="status">Active</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Recent Messages</h3>
+                        <button>View All</button>
+                    </div>
+
+                    <div class="message-item">
+                        <h4>Alice Chen</h4>
+                        <p>Can we discuss the project timeline?</p>
+                    </div>
+
+                    <div class="message-item">
+                        <h4>Bob Martinez</h4>
+                        <p>I've submitted the revised mockups</p>
+                    </div>
+
+                    <div class="message-item">
+                        <h4>Carol Davis</h4>
+                        <p>Payment has been processed!</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
     </div>
 
-    <div class="user-details">
-        <span class="label">Logged in as</span>
-        <h3>diksha.rade24</h3>
-        <span class="role">Client</span>
-    </div>
-</div>
+    <script>
+        // Spending Line Chart
+        const ctx1 = document.getElementById('spendingChart');
 
-        <nav>
-            <ul>
-                <li class="active"><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                <li><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i></i> Job Listings</button></li>
-                <li><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
-                <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
-                <li><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
-                <li><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
-        </nav>
-
-        <div class="bottom-links">
-            <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
-            <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main">
-
-        <div class="topbar">
-            <div>
-                <h1>Client Dashboard</h1>
-                <p>Manage your projects and proposals</p>
-            </div>
-
-            <button class="primary-btn" onclick="navigate('create_job.html')">
-                + Post New Job
-            </button>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="cards">
-            <div class="card">
-                <h4>Active Projects</h4>
-                <h2>3</h2>
-            </div>
-
-            <div class="card">
-                <h4>Pending Proposals</h4>
-                <h2>12</h2>
-            </div>
-
-            <div class="card">
-                <h4>Total Spent</h4>
-                <h2>$8,500</h2>
-            </div>
-
-            <div class="card">
-                <h4>Hired Freelancers</h4>
-                <h2>7</h2>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="charts-section">
-
-            <div class="chart-card">
-                <h3>Spending Trend</h3>
-                <canvas id="spendingChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h3>Projects Overview</h3>
-                <canvas id="projectsChart"></canvas>
-            </div>
-
-        </div>
-
-        <!-- Jobs & Messages Section -->
-        <div class="grid-section">
-
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>My Jobs</h3>
-                    <button>View All</button>
-                </div>
-
-                <div class="job-item">
-                    <h4>Full-Stack Web Application Development</h4>
-                    <span class="status">Active</span>
-                </div>
-
-                <div class="job-item">
-                    <h4>Mobile App UI/UX Design</h4>
-                    <span class="status">Active</span>
-                </div>
-
-                <div class="job-item">
-                    <h4>Content Writing for Tech Blog</h4>
-                    <span class="status">Active</span>
-                </div>
-            </div>
-
-            <div class="panel">
-                <div class="panel-header">
-                    <h3>Recent Messages</h3>
-                    <button>View All</button>
-                </div>
-
-                <div class="message-item">
-                    <h4>Alice Chen</h4>
-                    <p>Can we discuss the project timeline?</p>
-                </div>
-
-                <div class="message-item">
-                    <h4>Bob Martinez</h4>
-                    <p>I've submitted the revised mockups</p>
-                </div>
-
-                <div class="message-item">
-                    <h4>Carol Davis</h4>
-                    <p>Payment has been processed!</p>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-</div>
-
-<script>
-    // Spending Line Chart
-    const ctx1 = document.getElementById('spendingChart');
-
-    new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Amount Spent ($)',
-                data: [1000, 1500, 1200, 2000, 1800, 2500],
-                borderColor: '#1abc9c',
-                backgroundColor: 'rgba(26,188,156,0.1)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Amount Spent ($)',
+                    data: [1000, 1500, 1200, 2000, 1800, 2500],
+                    borderColor: '#1abc9c',
+                    backgroundColor: 'rgba(26,188,156,0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
             }
-        }
-    });
+        });
 
-    // Projects Bar Chart
-    const ctx2 = document.getElementById('projectsChart');
+        // Projects Bar Chart
+        const ctx2 = document.getElementById('projectsChart');
 
-    new Chart(ctx2, {
-        type: 'bar',
-        data: {
-            labels: ['Active', 'Completed', 'Pending'],
-            datasets: [{
-                label: 'Projects',
-                data: [3, 15, 5],
-                backgroundColor: ['#1abc9c', '#3498db', '#f39c12']
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Active', 'Completed', 'Pending'],
+                datasets: [{
+                    label: 'Projects',
+                    data: [3, 15, 5],
+                    backgroundColor: ['#1abc9c', '#3498db', '#f39c12']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
             }
-        }
-    });
-</script>
-<script src="https://unpkg.com/lucide@latest"></script>
-<script>
-  lucide.createIcons();
-</script>
+        });
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 
 
 </body>
+
 </html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Post New Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
+
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>diksha.rade24</h3>
+                    <span class="role">Client</span>
+                </div>
+            </div>
+
+            <nav>
+                <ul>
+                    <li class=""><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i>
+                            Dashboard</button></li>
+                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job
+                            Listings</button></li>
+                    <li class=""><button onclick="navigate('massages.html')"><i class="fas fa-comment-dots"></i>
+                            Messages</button></li>
+                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i>
+                            Payments</button></li>
+                    <li class="active"><button onclick="navigate('projects.html')"><i class="fas fa-user"></i>
+                            Projects</button></li>
+                    <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="bottom-links">
+                <button class="" onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help &
+                    Support</button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+
+            <div class="topbar">
+                <div>
+                    <h1>Post New Project</h1>
+                    <p>Launch a full-scale project and manage your team</p>
+                </div>
+            </div>
+
+            <div class="job-form-card">
+                <form id="projectForm">
+                    <label>Project Title *</label>
+                    <input type="text" id="proj_title" name="title" placeholder="e.g. Website Redesign 2024" required>
+
+                    <label>Project Description *</label>
+                    <textarea id="proj_description" name="description" rows="6"
+                        placeholder="Project objectives, scope, and key deliverables..." required></textarea>
+
+                    <label>Project Deadline *</label>
+                    <input type="date" id="proj_deadline" name="deadline" required>
+
+                    <label>Estimated Total Hours *</label>
+                    <input type="number" id="proj_hours" name="planned_hours" placeholder="e.g. 100" min="1" required>
+
+                    <div class="form-actions">
+                        <button type="button" class="secondary-btn" onclick="navigate('projects.html')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="primary-btn">
+                            <i class="fas fa-rocket"></i> Launch Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>
