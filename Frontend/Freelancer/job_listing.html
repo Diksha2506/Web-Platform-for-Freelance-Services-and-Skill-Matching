@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SkillSync - My Projects</title>
+    <title>SkillBridge - Job Listings</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
@@ -29,10 +29,10 @@
             <nav>
                 <ul>
                     <li class=""><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
+                    <li class="active"><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
                     <li class=""><button onclick="navigate('messages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
                     <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
-                    <li class="active"><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                    <li class=""><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
                     <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
                 </ul>
             </nav>
@@ -48,21 +48,19 @@
 
             <div class="topbar">
                 <div>
-                    <h1>My Projects</h1>
-                    <p>Manage and track all your posted projects</p>
+                    <h1>Job Listings</h1>
+                    <p>Find the perfect project or talent</p>
                 </div>
-
-                <button class="primary-btn" onclick="navigate('create_project.html')">
-                    + Post New Project
-                </button>
             </div>
 
-            <!-- Projects List -->
-            <div id="projectList" class="projects-list">
-                <!-- Dynamic content will be loaded here -->
-                <p>Loading projects...</p>
+            <!-- Search Section -->
+            <div class="search-section">
+                <input type="text" placeholder="Search jobs or skills..." class="search-input">
+                <button class="filter-btn">Filters</button>
             </div>
 
+            <!-- 🔥 Dynamic Jobs Will Appear Here -->
+            <div id="jobContainer"></div>
 
         </main>
 

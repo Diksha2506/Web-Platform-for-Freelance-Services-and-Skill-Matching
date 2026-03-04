@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Job Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
+            <div class="user-info">
+                <div class="user-avatar">??</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>User</h3>
+                    <span class="role">Role</span>
+                </div>
+            </div>
+            <nav>
+                <ul id="mainNav">
+                    <!-- populated by script.js? No, usually static in HTML but I'll keep it consistent with dashboard -->
+                    <li><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i>
+                            Dashboard</button></li>
+                    <li class="active"><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i>
+                            Job Listings</button></li>
+                    <li><button onclick="navigate('messages.html')"><i class="fas fa-comment-dots"></i>
+                            Messages</button></li>
+                    <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                    <li><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                    <li><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1 id="jobTitle">Job Title</h1>
+                    <p id="jobCategory">Category</p>
+                </div>
+                <div class="topbar-right" id="jobActions">
+                    <!-- Apply button for freelancer, or Edit/Delete for client owner -->
+                </div>
+            </div>
+
+            <div class="project-summary">
+                <div class="summary-card">
+                    <span>Budget</span>
+                    <h3 id="jobBudget">₹ 0</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Type</span>
+                    <h3 id="jobType">Freelance</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Level</span>
+                    <h3 id="jobLevel">Intermediate</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Deadline</span>
+                    <h3 id="jobDeadline">N/A</h3>
+                </div>
+            </div>
+
+            <div class="panel clean-panel">
+                <h3>Description</h3>
+                <p id="jobDescription">Loading...</p>
+            </div>
+
+            <div class="panel clean-panel">
+                <h3>Skills Required</h3>
+                <p id="jobSkills">Loading...</p>
+            </div>
+
+            <!-- This section only for clients who own the job -->
+            <div id="proposalsSection" class="panel clean-panel" style="display:none">
+                <h3>Proposals Received</h3>
+                <div id="proposalsList">
+                    <p>No proposals yet.</p>
+                </div>
+            </div>
+
+            <!-- This section only for freelancers -->
+            <div id="applySection" class="panel clean-panel" style="display:none">
+                <h3>Submit a Proposal</h3>
+                <form id="applyForm">
+                    <label>Cover Letter</label>
+                    <textarea id="coverLetter" rows="5" placeholder="Why are you the best fit for this job?"
+                        required></textarea>
+
+                    <label>Bid Amount (₹)</label>
+                    <input type="number" id="bidAmount" placeholder="Enter your bid" required>
+
+                    <button type="submit" class="primary-btn">Submit Proposal</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

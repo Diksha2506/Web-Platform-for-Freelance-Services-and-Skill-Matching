@@ -186,3 +186,37 @@ class SupportRequest(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class Proposal(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('interview', 'Interview Scheduled'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+    ]
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='proposals')
+    freelancer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='proposals')
+    cover_letter = models.TextField()
+    bid_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('job', 'freelancer')
+
+    def __str__(self):
+        return f"Proposal for {self.job.title} by {self.freelancer.username}"
+
+
+class Review(models.Model):
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='given_reviews')
+    freelancer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_reviews')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='reviews', null=True, blank=True)
+    rating = models.IntegerField(default=5)  # 1 to 5
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.freelancer.username} by {self.reviewer.username}"

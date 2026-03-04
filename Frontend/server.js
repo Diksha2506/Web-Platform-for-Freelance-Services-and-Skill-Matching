@@ -12,6 +12,7 @@ app.use(express.json());
 // Serve all folders as static
 app.use('/login', express.static(path.join(__dirname, 'login page')));
 app.use('/client', express.static(path.join(__dirname, 'ClientProfile_Page')));
+app.use('/freelancer', express.static(path.join(__dirname, 'Freelancer')));
 app.use('/landing', express.static(path.join(__dirname, 'Landing_Page')));
 
 // Default redirect to login

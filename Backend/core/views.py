@@ -1,9 +1,9 @@
 from decimal import Decimal
 
-from django.db.models import Sum
+from django.db.models import Sum, Max
 from django.contrib.auth import get_user_model
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -11,7 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.utils import timezone
 from datetime import timedelta
 
-from .models import Job, Profile, Message, Payment, Project, Task, Meeting, SupportRequest
+from .models import Job, Profile, Message, Payment, Project, Task, Meeting, SupportRequest, Proposal, Review
 from .serializers import (
     JobSerializer,
     ProfileSerializer,
@@ -25,6 +25,8 @@ from .serializers import (
     TaskSerializer,
     MeetingSerializer,
     SupportRequestSerializer,
+    ProposalSerializer,
+    ReviewSerializer,
 )
 
 
@@ -32,16 +34,33 @@ User = get_user_model()
 
 
 class JobListCreateView(generics.ListCreateAPIView):
-    queryset = Job.objects.all().order_by("-created_at")
     serializer_class = JobSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filterset_fields = ['job_type', 'experience_level', 'is_active', 'category']
+    search_fields = ['title', 'description', 'skills_required']
+    ordering_fields = ['created_at', 'budget']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        queryset = Job.objects.all().order_by("-created_at")
+        user = self.request.user
+        mine = self.request.query_params.get('mine')
+        
+        if mine == 'true' and user.is_authenticated:
+            return queryset.filter(posted_by=user)
+        return queryset
     
     def perform_create(self, serializer):
-        # Associate job with logged-in user if authenticated
         if self.request.user.is_authenticated:
             serializer.save(posted_by=self.request.user)
         else:
             serializer.save()
+
+
+class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class ProfileDetailView(generics.RetrieveUpdateAPIView):
@@ -61,43 +80,39 @@ class RegisterView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         resp = super().create(request, *args, **kwargs)
-        # resp.data contains created user representation (username/email)
-        role = request.data.get("role")
         username = request.data.get("username")
         password = request.data.get("password")
 
-        # If client, create tokens and set cookies so frontend doesn't need localStorage
-        if role == "client":
-            try:
-                user = User.objects.get(username=username)
-                refresh = RefreshToken.for_user(user)
-                access = refresh.access_token
+        # Auto-login after registration
+        try:
+            user = User.objects.get(username=username)
+            refresh = RefreshToken.for_user(user)
+            access = refresh.access_token
 
-                response = Response({"detail": "registered"}, status=status.HTTP_201_CREATED)
-                # set cookies
-                # Access token cookie (short lived)
-                response.set_cookie(
-                    key="access",
-                    value=str(access),
-                    httponly=True,
-                    secure=False,
-                    samesite="Lax",
-                    max_age=60 * 15,
-                )
-                # Refresh token cookie (longer lived)
-                response.set_cookie(
-                    key="refresh",
-                    value=str(refresh),
-                    httponly=True,
-                    secure=False,
-                    samesite="Lax",
-                    max_age=60 * 60 * 24,
-                )
-                return response
-            except Exception:
-                pass
-
-        return resp
+            user_role = getattr(user.profile, 'role', 'freelancer') if hasattr(user, 'profile') else 'freelancer'
+            response = Response({"detail": "registered", "user": {"username": user.username, "email": user.email, "role": user_role}}, status=status.HTTP_201_CREATED)
+            # set cookies
+            response.set_cookie(
+                key="access",
+                value=str(access),
+                httponly=True,
+                secure=False, # Set to True in production
+                samesite="Lax",
+                path="/",
+                max_age=60 * 15,
+            )
+            response.set_cookie(
+                key="refresh",
+                value=str(refresh),
+                httponly=True,
+                secure=False,
+                samesite="Lax",
+                path="/",
+                max_age=60 * 60 * 24,
+            )
+            return response
+        except Exception as e:
+            return resp
 
 
 class LoginView(TokenObtainPairView):
@@ -120,8 +135,11 @@ class LoginView(TokenObtainPairView):
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
 
+        # Get role from profile
+        user_role = getattr(user.profile, 'role', 'freelancer') if hasattr(user, 'profile') else 'freelancer'
+        
         data = {
-            "user": {"id": user.id, "username": user.username, "email": user.email},
+            "user": {"id": user.id, "username": user.username, "email": user.email, "role": user_role},
             "access": str(access),
             "refresh": str(refresh),
         }
@@ -134,6 +152,7 @@ class LoginView(TokenObtainPairView):
             httponly=True,
             secure=False,
             samesite="Lax",
+            path="/",
             max_age=60 * 15,
         )
         response.set_cookie(
@@ -142,6 +161,7 @@ class LoginView(TokenObtainPairView):
             httponly=True,
             secure=False,
             samesite="Lax",
+            path="/",
             max_age=60 * 60 * 24,
         )
 
@@ -176,6 +196,7 @@ class RefreshTokenView(TokenRefreshView):
             httponly=True,
             secure=False,
             samesite="Lax",
+            path="/",
             max_age=60 * 15,
         )
         return response
@@ -201,8 +222,8 @@ class LogoutView(APIView):
 
         response = Response({"detail": "logged out"}, status=status.HTTP_200_OK)
         # clear cookies
-        response.delete_cookie("access")
-        response.delete_cookie("refresh")
+        response.delete_cookie("access", path="/")
+        response.delete_cookie("refresh", path="/")
         return response
 
 
@@ -221,43 +242,54 @@ class MeView(generics.RetrieveAPIView):
 class DashboardSummaryView(APIView):
     """
     GET /api/dashboard/summary
+    Returns user-specific summary stats.
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        active_projects = Job.objects.count()
-        # For now, treat 0 as placeholder for pending proposals and hired freelancers
-        pending_proposals = 0
-        hired_freelancers = Profile.objects.count()
+        user = request.user
+        profile = getattr(user, 'profile', None)
+        role = profile.role if profile else 'client'
 
-        total_spent = (
-            Payment.objects.filter(status="completed").aggregate(
-                total=Sum("amount")
-            )["total"]
-            or Decimal("0")
-        )
+        if role == 'client':
+            active_projects = Project.objects.filter(client=user, status='active').count()
+            pending_proposals = Proposal.objects.filter(job__posted_by=user, status='pending').count()
+            hired_freelancers = Proposal.objects.filter(job__posted_by=user, status='accepted').values('freelancer').distinct().count()
+            total_spent = Payment.objects.filter(user=user, status="completed").aggregate(total=Sum("amount"))["total"] or Decimal("0")
+            
+            data = {
+                "active_projects": active_projects,
+                "pending_proposals": pending_proposals,
+                "total_spent": total_spent,
+                "hired_freelancers": hired_freelancers,
+            }
+        else:
+            # Freelancer view
+            active_projects = Proposal.objects.filter(freelancer=user, status='accepted').count() # Projects they are hired for
+            pending_proposals = Proposal.objects.filter(freelancer=user, status='pending').count()
+            total_earned = Payment.objects.filter(user=user, status="completed").aggregate(total=Sum("amount"))["total"] or Decimal("0") # In real app, payments would come from clients to them
+            profile_views = 156 # Mock value for now
+            
+            data = {
+                "active_projects": active_projects,
+                "pending_proposals": pending_proposals,
+                "total_earned": total_earned,
+                "profile_views": profile_views,
+            }
 
-        data = {
-            "active_projects": active_projects,
-            "pending_proposals": pending_proposals,
-            "total_spent": total_spent,
-            "hired_freelancers": hired_freelancers,
-        }
-        serializer = DashboardSummarySerializer(data)
-        return Response(serializer.data)
+        return Response(data)
 
 
 class DashboardJobsView(generics.ListAPIView):
-    """
-    GET /api/dashboard/jobs
-    Returns recent jobs for dashboard "My Jobs".
-    """
-
     serializer_class = JobSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        user = self.request.user
+        profile = getattr(user, 'profile', None)
+        if profile and profile.role == 'client':
+            return Job.objects.filter(posted_by=user).order_by("-created_at")[:3]
         return Job.objects.all().order_by("-created_at")[:3]
 
 
@@ -281,7 +313,7 @@ class DashboardMessagesView(generics.ListAPIView):
 class MessageThreadListView(generics.ListAPIView):
     """
     GET /api/messages/threads
-    Simple list of latest messages per sender for the left panel.
+    Returns the latest message from each person the user has communicated with.
     """
 
     serializer_class = MessageSerializer
@@ -289,11 +321,10 @@ class MessageThreadListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return (
-            Message.objects.filter(receiver=user)
-            .select_related("sender")
-            .order_by("-created_at")
-        )
+        # Get unique senders who sent messages to the user
+        latest_msgs = Message.objects.filter(receiver=user).values('sender').annotate(latest_id=Max('id'))
+        ids = [m['latest_id'] for m in latest_msgs]
+        return Message.objects.filter(id__in=ids).order_by("-created_at")
 
 
 class MessageListCreateView(generics.ListCreateAPIView):
@@ -361,7 +392,11 @@ class PaymentTransactionListView(generics.ListAPIView):
 class ProjectListCreateView(generics.ListCreateAPIView):
     queryset = Project.objects.all().order_by("-created_at")
     serializer_class = ProjectSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filterset_fields = ['status']
+    search_fields = ['title', 'description']
+    ordering_fields = ['created_at', 'deadline']
+    ordering = ['-created_at']
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:
@@ -378,19 +413,19 @@ class ProjectListCreateView(generics.ListCreateAPIView):
 class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
 class TaskCreateView(generics.CreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class MeetingListCreateView(generics.ListCreateAPIView):
     queryset = Meeting.objects.all()
     serializer_class = MeetingSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class FreelancerListView(generics.ListAPIView):
@@ -403,3 +438,52 @@ class SupportRequestCreateView(generics.CreateAPIView):
     queryset = SupportRequest.objects.all()
     serializer_class = SupportRequestSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        if self.request.user.is_authenticated:
+            serializer.save(user=self.request.user)
+        else:
+            serializer.save()
+
+
+class ProposalListCreateView(generics.ListCreateAPIView):
+    serializer_class = ProposalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        job_id = self.request.query_params.get('job_id')
+        
+        # If job_id is provided, filter by job (usually for client checking applications)
+        if job_id:
+            return Proposal.objects.filter(job_id=job_id)
+            
+        # If client, show proposals for their jobs
+        if hasattr(user, 'profile') and user.profile.role == 'client':
+            return Proposal.objects.filter(job__posted_by=user).order_by("-created_at")
+            
+        # If freelancer, show their own proposals
+        return Proposal.objects.filter(freelancer=user).order_by("-created_at")
+
+    def perform_create(self, serializer):
+        serializer.save(freelancer=self.request.user)
+
+
+class ProposalDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Proposal.objects.all()
+    serializer_class = ProposalSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class ReviewListCreateView(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        freelancer_id = self.request.query_params.get('freelancer_id')
+        if freelancer_id:
+            return Review.objects.filter(freelancer_id=freelancer_id).order_by("-created_at")
+        return Review.objects.all().order_by("-created_at")
+
+    def perform_create(self, serializer):
+        serializer.save(reviewer=self.request.user)

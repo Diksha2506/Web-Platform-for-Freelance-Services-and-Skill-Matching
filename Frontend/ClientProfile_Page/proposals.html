@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SkillBridge - Proposals</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="logo">⚡ SkillBridge</h2>
+            <div class="user-info">
+                <div class="user-avatar">DR</div>
+                <div class="user-details">
+                    <span class="label">Logged in as</span>
+                    <h3>diksha.rade24</h3>
+                    <span class="role">Client</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i>
+                            Dashboard</button></li>
+                    <li><button onclick="navigate('analytics.html')"><i class="fas fa-chart-pie"></i> Analytics</button>
+                    </li>
+                    <li class="active"><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i>
+                            Job Listings</button></li>
+                    <li><button onclick="navigate('messages.html')"><i class="fas fa-comment-dots"></i>
+                            Messages</button></li>
+                    <li><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
+                    <li><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
+                    <li><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+                </ul>
+            </nav>
+            <div class="bottom-links">
+                <button onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
+                <button onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help &
+                    Support</button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h1 id="jobTitle">Proposals</h1>
+                    <p id="jobCategory">Manage your job and applicants</p>
+                </div>
+            </div>
+
+            <!-- JOB SUMMARY (Merged from job-details) -->
+            <div class="project-summary" id="jobSummarySection" style="display:none">
+                <div class="summary-card">
+                    <span>Budget</span>
+                    <h3 id="jobBudget">₹ 0</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Type</span>
+                    <h3 id="jobType">Freelance</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Level</span>
+                    <h3 id="jobLevel">Intermediate</h3>
+                </div>
+                <div class="summary-card">
+                    <span>Deadline</span>
+                    <h3 id="jobDeadline">N/A</h3>
+                </div>
+            </div>
+
+            <div class="panel clean-panel" id="jobDescPanel" style="display:none">
+                <h3>Description</h3>
+                <p id="jobDescription">Loading...</p>
+            </div>
+
+            <div class="panel clean-panel" id="jobSkillsPanel" style="display:none">
+                <h3>Skills Required</h3>
+                <p id="jobSkills">Loading...</p>
+            </div>
+
+            <div class="panel clean-panel">
+                <h3 id="proposalsHeading">Proposals Received</h3>
+                <div id="proposalList">
+                    <p style="padding:20px">Loading proposals...</p>
+                </div>
+            </div>
+
+            <!-- This section only for freelancers -->
+            <div id="applySection" class="panel clean-panel" style="display:none">
+                <h3>Submit a Proposal</h3>
+                <form id="applyForm">
+                    <label>Cover Letter</label>
+                    <textarea id="coverLetter" rows="5" placeholder="Why are you the best fit for this job?"
+                        required></textarea>
+
+                    <label>Bid Amount (₹)</label>
+                    <input type="number" id="bidAmount" placeholder="Enter your bid" required>
+
+                    <button type="submit" class="primary-btn">Submit Proposal</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Schedule Interview Modal -->
+    <div id="scheduleModal">
+        <div class="schedule-modal-content">
+            <button class="schedule-modal-close" onclick="closeScheduleModal()">×</button>
+            <h3>Schedule Interview for <span id="scheduleName"></span></h3>
+
+            <div class="schedule-modal-body">
+                <label for="interviewDate">Date</label>
+                <input type="date" id="interviewDate">
+
+                <label>Time</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="number" id="interviewHour" min="1" max="12" placeholder="Hour">
+                    <input type="number" id="interviewMinute" min="0" max="59" placeholder="Minute">
+                    <select id="interviewAmPm">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                </div>
+
+                <label for="interviewMode">Mode</label>
+                <select id="interviewMode">
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                </select>
+
+                <label for="interviewInstructions">Instructions</label>
+                <textarea id="interviewInstructions" rows="3" placeholder="Enter instructions..."></textarea>
+            </div>
+
+            <div class="schedule-modal-footer">
+                <button class="primary-btn" onclick="confirmInterview()">Confirm Interview</button>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

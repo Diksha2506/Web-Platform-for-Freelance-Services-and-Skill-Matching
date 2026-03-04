@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SkillBridge - Client Dashboard</title>
+    <title>SkillBridge - Freelancer Dashboard</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 
     <div class="container">
 
-                <!-- Sidebar -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <h2 class="logo">⚡ SkillBridge</h2>
 
@@ -28,24 +28,31 @@
                 <div class="user-details">
                     <span class="label">Logged in as</span>
                     <h3>diksha.rade24</h3>
-                    <span class="role">Client</span>
+                    <span class="role">Freelancer</span>
                 </div>
             </div>
 
             <nav>
                 <ul>
-                    <li class="active"><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i> Dashboard</button></li>
-                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job Listings</button></li>
-                    <li class=""><button onclick="navigate('messages.html')"><i class="fas fa-comment-dots"></i> Messages</button></li>
-                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i> Payments</button></li>
-                    <li class=""><button onclick="navigate('projects.html')"><i class="fas fa-user"></i> Projects</button></li>
-                    <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button></li>
+                    <li class="active"><button onclick="navigate('dashboard.html')"><i class="fas fa-chart-line"></i>
+                            Dashboard</button></li>
+                    <li class=""><button onclick="navigate('job_listing.html')"><i class="fas fa-briefcase"></i> Job
+                            Listings</button></li>
+                    <li class=""><button onclick="navigate('messages.html')"><i class="fas fa-comment-dots"></i>
+                            Messages</button></li>
+                    <li class=""><button onclick="navigate('payments.html')"><i class="fas fa-wallet"></i>
+                            Payments</button></li>
+                    <li class=""><button onclick="navigate('projects.html')"><i class="fas fa-user"></i>
+                            Projects</button></li>
+                    <li class=""><button onclick="navigate('profile.html')"><i class="fas fa-user"></i> Profile</button>
+                    </li>
                 </ul>
             </nav>
 
             <div class="bottom-links">
                 <button class="" onclick="navigate('settings.html')"><i class="fas fa-gear"></i> Settings</button>
-                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help & Support</button>
+                <button class="" onclick="navigate('help_Center.html')"><i class="fas fa-circle-question"></i> Help &
+                    Support</button>
             </div>
         </aside>
 
@@ -54,17 +61,13 @@
 
             <div class="topbar">
                 <div>
-                    <h1>Client Dashboard</h1>
-                    <p>Manage your projects and proposals</p>
+                    <h1>Freelancer Dashboard</h1>
+                    <p>Track your earnings and active projects</p>
                 </div>
 
                 <div style="display:flex;gap:12px;align-items:center">
-                    <button class="primary-btn" onclick="navigate('create_job.html')">
-                        + Post New Job
-                    </button>
-                    <button class="primary-btn" style="background:#2ecc71;border-color:#2ecc71"
-                        onclick="navigate('create_project.html')">
-                        + Post New Project
+                    <button class="primary-btn" onclick="navigate('job_listing.html')">
+                        Browse Jobs
                     </button>
                     <button class="primary-btn" style="background:#e74c3c;border-color:#e74c3c"
                         onclick="handleLogout()">
@@ -86,13 +89,13 @@
                 </div>
 
                 <div class="card">
-                    <h4>Total Spent</h4>
-                    <h2>$8,500</h2>
+                    <h4>Total Earned</h4>
+                    <h2>$4,200</h2>
                 </div>
 
                 <div class="card">
-                    <h4>Hired Freelancers</h4>
-                    <h2>7</h2>
+                    <h4>Profile Views</h4>
+                    <h2>156</h2>
                 </div>
             </div>
 
@@ -173,8 +176,8 @@
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                 datasets: [{
-                    label: 'Amount Spent ($)',
-                    data: [1000, 1500, 1200, 2000, 1800, 2500],
+                    label: 'Earnings ($)',
+                    data: [400, 600, 500, 800, 700, 1200],
                     borderColor: '#1abc9c',
                     backgroundColor: 'rgba(26,188,156,0.1)',
                     tension: 0.4,

@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = "http://localhost:8000/api";
 
 // Register User (calls Django REST register endpoint)
 async function registerUser(event) {
@@ -42,7 +42,16 @@ async function registerUser(event) {
             body: JSON.stringify({ username, password }),
           });
           if (loginRes.ok) {
-            window.location.href = "/client/dashboard.html";
+            const loginData = await loginRes.json();
+            const userRole = loginData.user.role;
+            console.log("Auto-login successful after registration. Role:", userRole);
+            setTimeout(() => {
+              if (userRole === "client") {
+                window.location.href = "/client/dashboard.html";
+              } else {
+                window.location.href = "/freelancer/dashboard.html";
+              }
+            }, 500);
             return;
           }
         } catch (err) {
@@ -82,20 +91,25 @@ async function loginUser(event) {
     });
 
     if (response.ok) {
-      // server sets HttpOnly cookies; redirect by role
-      if (role === "client") {
-        window.location.href = "/client/dashboard.html";
-      } else {
-        // Redirect to freelancer dashboard when implementated
-        window.location.href = "/freelancer/dashboard.html";
-      }
+      const data = await response.json();
+      const userRole = data.user.role;
+      console.log("Login successful. Role:", userRole);
+
+      setTimeout(() => {
+        if (userRole === "client") {
+          window.location.href = "/client/dashboard.html";
+        } else {
+          window.location.href = "/freelancer/dashboard.html";
+        }
+      }, 500);
     } else {
       const data = await response.json();
-      alert(data.detail || data.error || data.non_field_errors || JSON.stringify(data));
+      console.error("Login failed:", data);
+      alert(data.detail || data.error || data.non_field_errors || "Login failed. Please try again.");
     }
   } catch (error) {
     alert("Server error. Try again later.");
-    console.error(error);
+    console.error("Login error:", error);
   }
 }
 
@@ -125,4 +139,18 @@ function setRole(role) {
   }
 }
 
+// Mock Google Authentication
+function googleAuth() {
+  const role = document.getElementById("role") ? document.getElementById("role").value : "freelancer";
+  alert(`Connecting to Google to authenticate as a ${role}...`);
+  // Redirect to backend OAuth endpoint would go here
+  // window.location.href = `${API_BASE}/auth/google/?role=${role}`;
+}
 
+// Mock GitHub Authentication
+function githubAuth() {
+  const role = document.getElementById("role") ? document.getElementById("role").value : "freelancer";
+  alert(`Connecting to GitHub to authenticate as a ${role}...`);
+  // Redirect to backend OAuth endpoint would go here
+  // window.location.href = `${API_BASE}/auth/github/?role=${role}`;
+}

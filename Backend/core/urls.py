@@ -3,6 +3,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (
     JobListCreateView,
+    JobDetailView,
     ProfileDetailView,
     RegisterView,
     LoginView,
@@ -22,11 +23,15 @@ from .views import (
     MeetingListCreateView,
     SupportRequestCreateView,
     FreelancerListView,
+    ProposalListCreateView,
+    ProposalDetailView,
+    ReviewListCreateView,
 )
 
 urlpatterns = [
     # Jobs & profile
     path("jobs/", JobListCreateView.as_view(), name="jobs"),
+    path("jobs/<int:pk>/", JobDetailView.as_view(), name="job-detail"),
     path("profile/freelancers/", FreelancerListView.as_view(), name="freelancer-list"),
     path("profile/<int:pk>/", ProfileDetailView.as_view(), name="profile"),
 
@@ -56,4 +61,11 @@ urlpatterns = [
     path("tasks/", TaskCreateView.as_view(), name="task-create"),
     path("meetings/", MeetingListCreateView.as_view(), name="meeting-list-create"),
     path("support/", SupportRequestCreateView.as_view(), name="support-create"),
+
+    # Proposals
+    path("proposals/", ProposalListCreateView.as_view(), name="proposals"),
+    path("proposals/<int:pk>/", ProposalDetailView.as_view(), name="proposal-detail"),
+
+    # Reviews
+    path("reviews/", ReviewListCreateView.as_view(), name="review-list-create"),
 ]
