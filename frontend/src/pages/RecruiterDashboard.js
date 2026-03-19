@@ -125,8 +125,8 @@ const RecruiterDashboard = () => {
   }, [activeTab]);
 
   useEffect(() => {
-    if (activeTab === 'projects') fetchProjects();
-    if (activeTab === 'payments') fetchPayments();
+    if (activeTab === 'projects' || activeTab === 'overview') fetchProjects();
+    if (activeTab === 'payments' || activeTab === 'overview') fetchPayments();
     if (activeTab === 'interviews') fetchInterviews();
   }, [activeTab, fetchProjects, fetchPayments, fetchInterviews]);
 
@@ -248,10 +248,10 @@ const RecruiterDashboard = () => {
   // ─── Overview ─────────────────────────────
   const renderOverview = () => {
     const spendingData = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      labels: paymentSummary?.monthly_spending?.map(m => m.month?.split(' ')[0]) || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
       datasets: [{
         label: 'Spending ($)',
-        data: [1200, 1900, 800, 1500, 2300, 1700],
+        data: paymentSummary?.monthly_spending?.map(m => m.amount) || [0, 0, 0, 0, 0, 0],
         borderColor: '#2EC4B6',
         backgroundColor: 'rgba(46,196,182,0.1)',
         fill: true,
@@ -1095,7 +1095,7 @@ const ProjectDetailView = ({ project, freelancers, onBack }) => {
     return (
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <button className="btn-secondary" style={{ marginBottom: 20, padding: '8px 16px' }} onClick={onBack}>← Back</button>
-        <div className="card" style={{ maxWidth: 600, padding: 24 }}>
+        <div className="card" style={{ width: '100%', padding: 24 }}>
           <h2 style={{ marginBottom: 20 }}>Create New Project</h2>
           <form onSubmit={handleCreateProject}>
             <div className="form-group">
@@ -1285,7 +1285,7 @@ const HelpCenter = () => {
         </div>
       </div>
 
-      <div className="card" style={{ padding: 24, maxWidth: 600 }}>
+      <div className="card" style={{ padding: 24, width: '100%' }}>
         <h3 style={{ marginBottom: 16, fontSize: '1.1rem' }}>Contact Support</h3>
         <form onSubmit={handleSubmitSupport}>
           <div className="form-group">
@@ -1393,7 +1393,7 @@ const CreateJobForm = ({ onSuccess }) => {
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-      <div className="card" style={{ maxWidth: 700 }}>
+      <div className="card" style={{ width: '100%' }}>
         <h2 style={{ fontSize: '1.4rem', marginBottom: 24 }}>Create New Job Post</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">

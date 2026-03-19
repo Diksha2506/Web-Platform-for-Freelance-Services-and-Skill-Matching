@@ -743,11 +743,30 @@ def recruiter_payment_summary(request):
     in_escrow = payments.filter(status='escrow').aggregate(total=Sum('amount'))['total'] or 0
     pending = payments.filter(status='pending').aggregate(total=Sum('amount'))['total'] or 0
 
+    now = timezone.now()
+    monthly = []
+    for i in range(5, -1, -1):
+        month_start = (now.replace(day=1) - timezone.timedelta(days=i * 30)).replace(day=1)
+        if i > 0:
+            month_end = (month_start + timezone.timedelta(days=32)).replace(day=1)
+        else:
+            month_end = now
+        month_total = payments.filter(
+            status='completed',
+            created_at__gte=month_start,
+            created_at__lt=month_end
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        monthly.append({
+            'month': month_start.strftime('%b %Y'),
+            'amount': float(month_total),
+        })
+
     return Response({
         'total_spent': float(total_spent),
         'in_escrow': float(in_escrow),
         'pending': float(pending),
         'total_transactions': payments.count(),
+        'monthly_spending': monthly,
     })
 
 

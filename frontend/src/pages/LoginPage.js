@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiEye, FiEyeOff, FiLogIn } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiLogIn, FiUser, FiLock } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -78,20 +78,24 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  placeholder="Enter your username"
-                  value={formData.username}
-                  onChange={handleChange}
-                  autoComplete="username"
-                />
+                <div className="input-icon-wrapper">
+                  <FiUser className="input-icon" />
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter your username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    autoComplete="username"
+                  />
+                </div>
                 {errors.username && <span className="form-error">{errors.username}</span>}
               </div>
 
               <div className="form-group">
                 <label>Password</label>
-                <div className="password-input-wrapper">
+                <div className="input-icon-wrapper password-input-wrapper">
+                  <FiLock className="input-icon" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"

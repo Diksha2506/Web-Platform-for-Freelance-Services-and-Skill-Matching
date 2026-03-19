@@ -28,9 +28,9 @@
   --gradient-card: linear-gradient(145deg, #FFFFFF 0%, #FAFBFC 100%);
   --gradient-accent: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08);
   --shadow-glow: 0 4px 20px rgba(46, 196, 182, 0.2);
 
   --radius-sm: 8px;
@@ -180,7 +180,7 @@ input, textarea, select {
 
 .auth-form-wrapper {
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
 }
 
 .auth-logo {
@@ -236,7 +236,7 @@ input, textarea, select {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px 20px;
   background: var(--bg-input);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
@@ -254,6 +254,26 @@ input, textarea, select {
 }
 
 .form-group input::placeholder { color: var(--text-muted); }
+
+.input-icon-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon-wrapper .input-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.input-icon-wrapper input {
+  padding-left: 50px !important;
+}
 
 .form-row {
   display: grid;
@@ -746,6 +766,7 @@ input, textarea, select {
   margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

@@ -1388,7 +1388,7 @@ const FreelancerHelpCenter = () => {
         </div>
       </div>
 
-      <div className="card" style={{ padding: 24, maxWidth: 600 }}>
+      <div className="card" style={{ padding: 24, width: '100%' }}>
         <h3 style={{ marginBottom: 16, fontSize: '1.1rem' }}>Contact Support</h3>
         <form onSubmit={handleSubmitSupport}>
           <div className="form-group">

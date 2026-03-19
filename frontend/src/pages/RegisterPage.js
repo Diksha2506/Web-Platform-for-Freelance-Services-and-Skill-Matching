@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiEye, FiEyeOff, FiUserPlus } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiUserPlus, FiUser, FiMail, FiLock, FiPhone } from 'react-icons/fi';
 import { HiOutlineBriefcase, HiOutlineCode } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -162,37 +162,46 @@ const RegisterPage = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>First Name</label>
-                    <input
-                      type="text"
-                      name="first_name"
-                      placeholder="John"
-                      value={formData.first_name}
-                      onChange={handleChange}
-                    />
+                    <div className="input-icon-wrapper">
+                      <FiUser className="input-icon" />
+                      <input
+                        type="text"
+                        name="first_name"
+                        placeholder="John"
+                        value={formData.first_name}
+                        onChange={handleChange}
+                      />
+                    </div>
                     {errors.first_name && <span className="form-error">{errors.first_name}</span>}
                   </div>
                   <div className="form-group">
                     <label>Last Name</label>
-                    <input
-                      type="text"
-                      name="last_name"
-                      placeholder="Doe"
-                      value={formData.last_name}
-                      onChange={handleChange}
-                    />
+                    <div className="input-icon-wrapper">
+                      <FiUser className="input-icon" />
+                      <input
+                        type="text"
+                        name="last_name"
+                        placeholder="Doe"
+                        value={formData.last_name}
+                        onChange={handleChange}
+                      />
+                    </div>
                     {errors.last_name && <span className="form-error">{errors.last_name}</span>}
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label>Phone (Optional)</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="+1 234 567 890"
-                    value={formData.phone}
-                    onChange={handleChange}
-                  />
+                  <div className="input-icon-wrapper">
+                    <FiPhone className="input-icon" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="+1 234 567 890"
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
                 <motion.button
@@ -218,33 +227,40 @@ const RegisterPage = () => {
               >
                 <div className="form-group">
                   <label>Username</label>
-                  <input
-                    type="text"
-                    name="username"
-                    placeholder="johndoe"
-                    value={formData.username}
-                    onChange={handleChange}
-                    autoComplete="username"
-                  />
+                  <div className="input-icon-wrapper">
+                    <FiUser className="input-icon" />
+                    <input
+                      type="text"
+                      name="username"
+                      placeholder="johndoe"
+                      value={formData.username}
+                      onChange={handleChange}
+                      autoComplete="username"
+                    />
+                  </div>
                   {errors.username && <span className="form-error">{errors.username}</span>}
                 </div>
 
                 <div className="form-group">
                   <label>Email Address</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="john@example.com"
-                    value={formData.email}
-                    onChange={handleChange}
-                    autoComplete="email"
-                  />
+                  <div className="input-icon-wrapper">
+                    <FiMail className="input-icon" />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      autoComplete="email"
+                    />
+                  </div>
                   {errors.email && <span className="form-error">{errors.email}</span>}
                 </div>
 
                 <div className="form-group">
                   <label>Password</label>
-                  <div className="password-input-wrapper">
+                  <div className="input-icon-wrapper password-input-wrapper">
+                    <FiLock className="input-icon" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       name="password"
@@ -262,14 +278,17 @@ const RegisterPage = () => {
 
                 <div className="form-group">
                   <label>Confirm Password</label>
-                  <input
-                    type="password"
-                    name="password2"
-                    placeholder="Repeat your password"
-                    value={formData.password2}
-                    onChange={handleChange}
-                    autoComplete="new-password"
-                  />
+                  <div className="input-icon-wrapper">
+                    <FiLock className="input-icon" />
+                    <input
+                      type="password"
+                      name="password2"
+                      placeholder="Repeat your password"
+                      value={formData.password2}
+                      onChange={handleChange}
+                      autoComplete="new-password"
+                    />
+                  </div>
                   {errors.password2 && <span className="form-error">{errors.password2}</span>}
                 </div>
 
