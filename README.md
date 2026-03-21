@@ -350,6 +350,27 @@ Current development setup uses:
 - Admin reporting and analytics
 - Cloud-ready database and storage integration
 
+## Deploy on Render
+
+This repository now includes `render.yaml` and `build.sh` for one-service deployment:
+- React frontend is built during Render build.
+- Built frontend files are copied to `backend/frontend_build`.
+- Django serves API routes and the React app from the same domain.
+
+### Steps
+
+1. Push this repository to GitHub.
+2. In Render, choose **New +** -> **Blueprint**.
+3. Select this GitHub repo so Render reads `render.yaml`.
+4. After service creation, set these environment variables in Render:
+   - `CSRF_TRUSTED_ORIGINS=https://<your-render-domain>.onrender.com`
+   - `CORS_ALLOWED_ORIGINS=https://<your-render-domain>.onrender.com`
+5. Deploy and open the generated Render URL.
+
+### Important Note
+
+Current deployment uses SQLite (`backend/db.sqlite3`), which is not persistent on Render free instances. For production data safety, migrate to PostgreSQL.
+
 ## License
 
 No explicit license file is currently included in the repository. Add one if you plan to distribute or open-source the project formally.
