@@ -4,23 +4,25 @@ Django settings for backend project.
 
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load env variables (safe even if .env not present)
 load_dotenv(BASE_DIR / '.env')
 
+# SECURITY
 SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-dev-key-change-in-production")
 
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+# DEBUG (change to False after debugging)
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
     "localhost,127.0.0.1,.onrender.com",
 ).split(",")
 
-# Application definition
+# APPLICATIONS
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,6 +35,7 @@ INSTALLED_APPS = [
     'api',
 ]
 
+# MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -45,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS settings
+# CORS
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
@@ -56,12 +59,8 @@ CORS_ALLOWED_ORIGINS = [
     ).split(",")
     if origin
 ]
-CORS_ALLOW_HEADERS = [
-    'accept', 'accept-encoding', 'authorization', 'content-type',
-    'dnt', 'origin', 'user-agent', 'x-csrftoken', 'x-requested-with',
-]
 
-# CSRF settings for cross-origin
+# CSRF
 CSRF_TRUSTED_ORIGINS = [
     origin
     for origin in os.environ.get(
@@ -70,17 +69,17 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(",")
     if origin
 ]
-CSRF_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_HTTPONLY = False
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# URL CONFIG
 ROOT_URLCONF = 'backend.urls'
 
+# TEMPLATES (FIXED ISSUE HERE)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "frontend_build"],
+        'DIRS': [],  # ✅ FIXED (no frontend_build dependency)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,9 +91,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Database - SQLite for development, switch to PostgreSQL for production
+# DATABASE (SQLite OK for now)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -102,10 +102,10 @@ DATABASES = {
     }
 }
 
-# Custom user model
+# CUSTOM USER
 AUTH_USER_MODEL = 'api.User'
 
-# REST Framework settings
+# REST FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.authentication.CsrfExemptSessionAuthentication',
@@ -115,9 +115,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CSRF cookie name
-CSRF_COOKIE_NAME = 'csrftoken'
-
+# PASSWORD VALIDATORS
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -125,20 +123,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# INTERNATIONAL
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-FRONTEND_STATIC_DIR = BASE_DIR / "frontend_build" / "static"
-STATICFILES_DIRS = [FRONTEND_STATIC_DIR] if FRONTEND_STATIC_DIR.exists() else []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# MEDIA
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# DEFAULT FIELD
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email settings (console backend for development)
+# EMAIL (DEV)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
