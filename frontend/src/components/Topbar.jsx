@@ -7,10 +7,7 @@ const Topbar = ({ title, subtitle, unreadCount, onNotificationClick, onActionCli
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
+  // handleLogout logic removed from here and moved to profile pages as requested
 
   return (
     <div className="topbar">
@@ -38,45 +35,32 @@ const Topbar = ({ title, subtitle, unreadCount, onNotificationClick, onActionCli
           <button
             onClick={onActionClick}
             style={{
-              display: 'flex', alignItems: 'center', gap: '6px',
-              padding: '10px 20px', background: 'linear-gradient(135deg, #2EC4B6, #25A99D)',
-              color: '#FFFFFF', border: 'none', borderRadius: '10px',
-              fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer',
-              transition: 'all 0.3s ease', boxShadow: '0 2px 8px rgba(46,196,182,0.25)',
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '12px 24px', background: 'var(--gradient-primary)',
+              color: '#FFFFFF', border: 'none', borderRadius: '12px',
+              fontWeight: 800, fontSize: '0.9rem', cursor: 'pointer',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: 'var(--shadow-glow)',
             }}
           >
             <FiPlus /> {actionLabel}
           </button>
         )}
-        <button
-          onClick={handleLogout}
-          title="Logout"
-          style={{
-            display: 'flex', alignItems: 'center', gap: '6px',
-            padding: '8px 16px', background: 'transparent',
-            color: '#DC2626', border: '1.5px solid #FCA5A5',
-            borderRadius: '10px', fontWeight: 600, fontSize: '0.85rem',
-            cursor: 'pointer', transition: 'all 0.3s ease',
-          }}
-          onMouseEnter={e => { e.target.style.background = '#DC2626'; e.target.style.color = '#fff'; }}
-          onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#DC2626'; }}
-        >
-          <FiLogOut /> Logout
-        </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={onProfileClick}>
           <div style={{
-            width: 36, height: 36, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #2EC4B6, #25A99D)',
+            width: 40, height: 40, borderRadius: '12px',
+            background: 'var(--gradient-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 700, fontSize: '0.85rem', color: '#FFFFFF',
+            fontWeight: 800, fontSize: '0.9rem', color: '#FFFFFF',
+            boxShadow: 'var(--shadow-sm)',
           }}>
             {user?.first_name?.[0]?.toUpperCase() || 'U'}
           </div>
           <div style={{ lineHeight: 1.3 }}>
-            <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#1F2937' }}>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
               {user?.first_name || user?.username}
             </div>
-            <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'capitalize' }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'capitalize', fontWeight: 600 }}>
               {user?.role}
             </div>
           </div>

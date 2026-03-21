@@ -85,14 +85,15 @@ function App() {
             duration: 4000,
             style: {
               background: '#FFFFFF',
-              color: '#1A1A2E',
-              border: '1px solid #E5E7EB',
-              borderRadius: '12px',
-              padding: '14px 20px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: '16px',
+              padding: '16px 24px',
+              boxShadow: 'var(--shadow-lg)',
+              fontWeight: 600,
             },
             success: {
-              iconTheme: { primary: '#2EC4B6', secondary: '#fff' },
+              iconTheme: { primary: '#0D9488', secondary: '#fff' },
             },
             error: {
               iconTheme: { primary: '#EF4444', secondary: '#fff' },

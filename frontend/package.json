@@ -3,19 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^1.13.6",
+    "axios": "^1.6.7",
     "chart.js": "^4.5.1",
-    "framer-motion": "^12.34.3",
+    "framer-motion": "^11.11.1",
     "lucide-react": "^0.575.0",
+    "motion-dom": "^12.38.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.6.0",
-    "react-icons": "^5.5.0",
-    "react-router-dom": "^7.13.1",
-    "react-scripts": "5.0.1"
+    "react-icons": "^4.12.0",
+    "react-router-dom": "^6.22.0",
+    "react-scripts": "^5.0.1"
   },
-  "proxy": "http://localhost:8000",
+  "proxy": "http://127.0.0.1:8000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -38,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression": "^7.27.1"
   }
 }

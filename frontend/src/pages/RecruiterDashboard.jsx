@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiBriefcase, FiUsers, FiBell, FiPlus, FiTrash2, FiCheck, FiX, FiEye, FiMessageCircle, FiChevronDown, FiClock } from 'react-icons/fi';
-import { LuLayoutDashboard, LuBriefcase, LuCirclePlus, LuFolderKanban, LuMessageSquare, LuCreditCard, LuBell, LuBuilding2, LuCircleHelp, LuVideo, LuCalendarClock, LuStar } from 'react-icons/lu';
+import { FiBriefcase, FiUsers, FiBell, FiPlus, FiTrash2, FiCheck, FiX, FiEye, FiMessageCircle, FiChevronDown, FiClock, FiLogOut, FiDollarSign, FiLock } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { LuLayoutDashboard, LuBriefcase, LuPlusCircle, LuFolderKanban, LuMessageSquare, LuCreditCard, LuBell, LuBuilding2, LuHelpCircle, LuVideo, LuCalendarClock, LuStar } from 'react-icons/lu';
 import toast from 'react-hot-toast';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
@@ -20,7 +21,13 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
 
 const RecruiterDashboard = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
   const [myJobs, setMyJobs] = useState([]);
@@ -51,14 +58,13 @@ const RecruiterDashboard = () => {
   const navItems = [
     { id: 'overview', label: 'Dashboard', icon: <LuLayoutDashboard /> },
     { id: 'my-jobs', label: 'Job Listings', icon: <LuBriefcase /> },
-    { id: 'create-job', label: 'Post a Job', icon: <LuCirclePlus /> },
     { id: 'interviews', label: 'Interviews', icon: <LuVideo /> },
     { id: 'projects', label: 'Projects', icon: <LuFolderKanban /> },
     { id: 'messages', label: 'Messages', icon: <LuMessageSquare /> },
     { id: 'payments', label: 'Payments', icon: <LuCreditCard /> },
     { id: 'notifications', label: 'Notifications', icon: <LuBell />, badge: notifications.filter(n => !n.is_read).length },
     { id: 'profile', label: 'Company Profile', icon: <LuBuilding2 /> },
-    { id: 'help', label: 'Help Center', icon: <LuCircleHelp /> },
+    { id: 'help', label: 'Help Center', icon: <LuHelpCircle /> },
   ];
 
   const fetchData = useCallback(async () => {
@@ -248,35 +254,44 @@ const RecruiterDashboard = () => {
   // ─── Overview ─────────────────────────────
   const renderOverview = () => {
     const spendingData = {
-      labels: paymentSummary?.monthly_spending?.map(m => m.month?.split(' ')[0]) || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      labels: paymentSummary?.monthly_spending?.map(m => m.month?.split(' ')[0]) || [],
       datasets: [{
         label: 'Spending ($)',
-        data: paymentSummary?.monthly_spending?.map(m => m.amount) || [0, 0, 0, 0, 0, 0],
-        borderColor: '#2EC4B6',
-        backgroundColor: 'rgba(46,196,182,0.1)',
+        data: paymentSummary?.monthly_spending?.map(m => m.amount) || [],
+        borderColor: '#6366F1',
+        backgroundColor: 'rgba(99, 102, 241, 0.1)',
         fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#2EC4B6',
+        tension: 0.45,
+        pointBackgroundColor: '#6366F1',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 8,
       }],
     };
-    const projectsData = {
-      labels: ['Active', 'Completed', 'On Hold'],
+    const postingsData = {
+      labels: stats?.monthly_postings?.map(m => m.month?.split(' ')[0]) || [],
       datasets: [{
-        label: 'Projects',
-        data: [
-          projects.filter(p => p.status === 'active').length || (stats?.open_jobs || 0),
-          projects.filter(p => p.status === 'completed').length || (stats?.total_hires || 0),
-          projects.filter(p => p.status === 'on_hold').length || 0,
-        ],
-        backgroundColor: ['#2EC4B6', '#3B82F6', '#F59E0B'],
-        borderRadius: 8,
+        label: 'Jobs Posted',
+        data: stats?.monthly_postings?.map(m => m.count) || [],
+        borderColor: '#0D9488',
+        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#0D9488',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
       }],
     };
     const chartOptions = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, grid: { color: '#F0F0F0' } }, x: { grid: { display: false } } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#F0F0F5' }, ticks: { color: '#6B7280', font: { size: 11 }, stepSize: 1 } },
+        x: { grid: { display: false }, ticks: { color: '#6B7280', font: { size: 11 } } }
+      },
     };
 
     return (
@@ -287,7 +302,7 @@ const RecruiterDashboard = () => {
               <div className="stat-icon purple"><FiBriefcase /></div>
             </div>
             <h3>{stats?.total_jobs_posted || 0}</h3>
-            <p>Active Projects</p>
+            <p>Total Jobs Posted</p>
           </motion.div>
           <motion.div className="stat-card" whileHover={{ y: -4 }}>
             <div className="stat-card-header">
@@ -298,33 +313,33 @@ const RecruiterDashboard = () => {
           </motion.div>
           <motion.div className="stat-card" whileHover={{ y: -4 }}>
             <div className="stat-card-header">
-              <div className="stat-icon green"><FiBriefcase /></div>
-              <span className="stat-trend up">Active</span>
+              <div className="stat-icon green"><FiCheck /></div>
+              <span className="stat-trend up">Live</span>
             </div>
-            <h3>${paymentSummary?.total_spent || 0}</h3>
-            <p>Total Spent</p>
+            <h3>{stats?.total_hires || 0}</h3>
+            <p>Confirmed Hires</p>
           </motion.div>
           <motion.div className="stat-card" whileHover={{ y: -4 }}>
             <div className="stat-card-header">
-              <div className="stat-icon orange"><FiCheck /></div>
+              <div className="stat-icon orange"><FiDollarSign /></div>
             </div>
-            <h3>{stats?.total_hires || 0}</h3>
-            <p>Hired Freelancers</p>
+            <h3>${paymentSummary?.total_spent?.toLocaleString() || 0}</h3>
+            <p>Total Budget Spent</p>
           </motion.div>
         </div>
 
         {/* Charts */}
         <div className="charts-grid">
           <div className="chart-card">
-            <h3>Spending Trend</h3>
+            <h3>Budget Spending Trend</h3>
             <div style={{ height: 250 }}>
               <Line data={spendingData} options={chartOptions} />
             </div>
           </div>
           <div className="chart-card">
-            <h3>Projects Overview</h3>
+            <h3>Job Postings Trend</h3>
             <div style={{ height: 250 }}>
-              <Bar data={projectsData} options={chartOptions} />
+              <Line data={postingsData} options={chartOptions} />
             </div>
           </div>
         </div>
@@ -393,7 +408,7 @@ const RecruiterDashboard = () => {
                 <tr key={job.id}>
                   <td style={{ fontWeight: 600 }}>{job.title}</td>
                   <td style={{ color: '#6B7280', textTransform: 'capitalize' }}>{job.job_type?.replace('_', ' ')}</td>
-                  <td style={{ color: '#2EC4B6', fontWeight: 600 }}>${job.pay_per_hour}</td>
+                  <td style={{ color: 'var(--primary)', fontWeight: 700 }}>${job.pay_per_hour}</td>
                   <td>{job.applicants_count}</td>
                   <td><span className={`job-status-badge badge-${job.status}`}>{job.status}</span></td>
                   <td>
@@ -516,17 +531,17 @@ const RecruiterDashboard = () => {
     <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
       <div className="payment-cards">
         <div className="payment-card">
-          <div className="payment-icon" style={{ background: 'rgba(46,196,182,0.12)', color: '#2EC4B6' }}>💰</div>
+          <div className="payment-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}><FiDollarSign /></div>
           <h3>${paymentSummary?.total_spent?.toLocaleString() || '0'}</h3>
           <p>Total Spent</p>
         </div>
         <div className="payment-card">
-          <div className="payment-icon" style={{ background: 'rgba(59,130,246,0.12)', color: '#3B82F6' }}>🔒</div>
+          <div className="payment-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}><FiLock /></div>
           <h3>${paymentSummary?.in_escrow?.toLocaleString() || '0'}</h3>
           <p>In Escrow</p>
         </div>
         <div className="payment-card">
-          <div className="payment-icon" style={{ background: 'rgba(245,158,11,0.12)', color: '#F59E0B' }}>⏳</div>
+          <div className="payment-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}><FiClock /></div>
           <h3>${paymentSummary?.pending?.toLocaleString() || '0'}</h3>
           <p>Pending</p>
         </div>
@@ -534,7 +549,7 @@ const RecruiterDashboard = () => {
 
       {/* Payment Requests Section */}
       <div className="transaction-panel" style={{ marginBottom: 24 }}>
-        <h3 style={{ marginBottom: 16 }}>Payment Requests {filteredRequests.length > 0 && <span style={{ background: '#FEF3C7', color: '#D97706', padding: '2px 10px', borderRadius: 12, fontSize: '0.8rem', marginLeft: 8 }}>{filteredRequests.length} pending</span>}</h3>
+        <h3 style={{ marginBottom: 16 }}>Payment Requests {filteredRequests.length > 0 && <span style={{ background: 'var(--warning-soft)', color: 'var(--warning)', padding: '2px 10px', borderRadius: 12, fontSize: '0.8rem', marginLeft: 8, fontWeight: 700 }}>{filteredRequests.length} pending</span>}</h3>
         {filteredRequests.length > 0 ? (
           <div className="transaction-list">
             {filteredRequests.map(req => (
@@ -550,7 +565,7 @@ const RecruiterDashboard = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleApprovePayment(req.id)}
-                    style={{ padding: '6px 16px', background: '#2EC4B6', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 4 }}
+                    style={{ padding: '6px 16px', background: 'var(--primary)', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 4 }}
                   >
                     <FiCheck /> Approve
                   </motion.button>
@@ -632,7 +647,7 @@ const RecruiterDashboard = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="notification-icon" style={{ background: 'rgba(46,196,182,0.12)', color: '#2EC4B6' }}>
+            <div className="notification-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}>
               <FiBell />
             </div>
             <div className="notification-content">
@@ -644,7 +659,7 @@ const RecruiterDashboard = () => {
         ))}
         {filtered.length === 0 && (
           <div className="empty-state">
-            <div className="empty-icon">🔔</div>
+            <div className="empty-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)', padding: 16, borderRadius: '50%' }}><FiBell /></div>
             <h3>No notifications</h3>
             <p>You're all caught up!</p>
           </div>
@@ -666,10 +681,26 @@ const RecruiterDashboard = () => {
           <div className="profile-info">
             <h2>{user?.first_name} {user?.last_name}</h2>
             <p>{profile.company_name || 'Company'} · {profile.industry || 'Industry'}</p>
-            <p style={{ color: '#2EC4B6', fontWeight: 600, marginTop: 4 }}>
+            <p style={{ color: 'var(--primary)', fontWeight: 700, marginTop: 4 }}>
               {profile.total_jobs_posted || 0} Jobs Posted · {profile.total_hires || 0} Hires
             </p>
           </div>
+          <button 
+            className="btn-secondary" 
+            onClick={handleLogout}
+            style={{ 
+              marginLeft: 'auto', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              color: 'var(--error)',
+              borderColor: 'var(--error-soft)',
+              background: 'var(--error-soft)',
+              fontWeight: 700
+            }}
+          >
+            <FiLogOut /> Sign Out
+          </button>
         </div>
         <RecruiterProfileForm user={user} profile={profile} onSave={handleProfileUpdate} />
       </motion.div>
@@ -689,17 +720,17 @@ const RecruiterDashboard = () => {
     const completed = filtered.filter(iv => iv.status === 'completed');
     const cancelled = filtered.filter(iv => iv.status === 'cancelled');
 
-    const statusColor = { scheduled: '#3B82F6', completed: '#10B981', cancelled: '#EF4444' };
+    const statusColor = { scheduled: 'var(--ocean)', completed: 'var(--success)', cancelled: 'var(--error)' };
     const typeLabel = { video: 'Video Call', phone: 'Phone Call', in_person: 'In Person' };
 
     return (
       <motion.div key="interviews" variants={pageVariants} initial="initial" animate="animate" exit="exit">
         <div className="stats-grid" style={{ marginBottom: 24 }}>
           {[
-            { label: 'Upcoming', value: upcoming.length, color: '#3B82F6' },
-            { label: 'Completed', value: completed.length, color: '#10B981' },
-            { label: 'Cancelled', value: cancelled.length, color: '#EF4444' },
-            { label: 'Total', value: interviews.length, color: '#2EC4B6' },
+            { label: 'Upcoming', value: upcoming.length, color: 'var(--ocean)' },
+            { label: 'Completed', value: completed.length, color: 'var(--success)' },
+            { label: 'Cancelled', value: cancelled.length, color: 'var(--error)' },
+            { label: 'Total', value: interviews.length, color: 'var(--primary)' },
           ].map((s, i) => (
             <div key={i} className="stat-card">
               <p style={{ color: '#6B7280', fontSize: '0.85rem' }}>{s.label}</p>

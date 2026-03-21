@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiBriefcase, FiFileText, FiBell, FiMapPin, FiClock, FiDollarSign, FiSend, FiMessageCircle, FiCheck, FiChevronDown } from 'react-icons/fi';
-import { HiOutlineSparkles } from 'react-icons/hi';
-import { LuLayoutDashboard, LuBriefcase, LuClipboardList, LuWallet, LuFolderKanban, LuMessageSquare, LuBell, LuCircleUser, LuCircleHelp, LuVideo, LuStar } from 'react-icons/lu';
+import { useNavigate } from 'react-router-dom';
+import { FiBriefcase, FiFileText, FiBell, FiMapPin, FiClock, FiDollarSign, FiSend, FiMessageCircle, FiCheck, FiChevronDown, FiLogOut } from 'react-icons/fi';
+// Removed hi import
+import { LuLayoutDashboard, LuBriefcase, LuClipboardList, LuWallet, LuFolderKanban, LuMessageSquare, LuBell, LuUserCircle, LuHelpCircle, LuVideo, LuStar, LuSparkles } from 'react-icons/lu';
 import toast from 'react-hot-toast';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
@@ -18,7 +19,13 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement, Title, Tooltip, Legend, Filler);
 
 const FreelancerDashboard = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState(null);
   const [jobs, setJobs] = useState([]);
@@ -45,8 +52,8 @@ const FreelancerDashboard = () => {
     { id: 'projects', label: 'Projects', icon: <LuFolderKanban /> },
     { id: 'messages', label: 'Messages', icon: <LuMessageSquare /> },
     { id: 'notifications', label: 'Notifications', icon: <LuBell />, badge: notifications.filter(n => !n.is_read).length },
-    { id: 'profile', label: 'My Profile', icon: <LuCircleUser /> },
-    { id: 'help', label: 'Help Center', icon: <LuCircleHelp /> },
+    { id: 'profile', label: 'My Profile', icon: <LuUserCircle /> },
+    { id: 'help', label: 'Help Center', icon: <LuHelpCircle /> },
   ];
 
   const fetchData = useCallback(async () => {
@@ -180,7 +187,7 @@ const FreelancerDashboard = () => {
       <div className="stats-grid">
         <motion.div className="stat-card" whileHover={{ y: -4 }}>
           <div className="stat-card-header">
-            <div className="stat-icon purple"><FiBriefcase /></div>
+            <div className="stat-icon purple" style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}><FiBriefcase /></div>
             <span className="stat-trend up">Available</span>
           </div>
           <h3>{stats?.available_jobs || 0}</h3>
@@ -202,7 +209,7 @@ const FreelancerDashboard = () => {
         </motion.div>
         <motion.div className="stat-card" whileHover={{ y: -4 }}>
           <div className="stat-card-header">
-            <div className="stat-icon green"><HiOutlineSparkles /></div>
+            <div className="stat-icon green"><LuSparkles /></div>
           </div>
           <h3>{stats?.accepted_applications || 0}</h3>
           <p>Accepted</p>
@@ -216,50 +223,59 @@ const FreelancerDashboard = () => {
           <div style={{ height: 250 }}>
             <Line
               data={{
-                labels: earningsStats?.monthly_earnings?.map(m => m.month?.split(' ')[0]) || ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                labels: earningsStats?.monthly_earnings?.map(m => m.month?.split(' ')[0]) || [],
                 datasets: [{
                   label: 'Earnings ($)',
-                  data: earningsStats?.monthly_earnings?.map(m => m.amount) || [0, 0, 0, 0, 0, 0],
-                  borderColor: '#2EC4B6',
-                  backgroundColor: 'rgba(46,196,182,0.1)',
+                  data: earningsStats?.monthly_earnings?.map(m => m.amount) || [],
+                  borderColor: '#0D9488',
+                  backgroundColor: 'rgba(13, 148, 136, 0.12)',
                   fill: true,
-                  tension: 0.4,
-                  pointBackgroundColor: '#2EC4B6',
+                  tension: 0.45,
+                  pointBackgroundColor: '#0D9488',
+                  pointBorderColor: '#fff',
+                  pointBorderWidth: 2,
+                  pointRadius: 5,
+                  pointHoverRadius: 8,
                 }],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#F0F0F0' } }, x: { grid: { display: false } } },
+                scales: {
+                  y: { beginAtZero: true, grid: { color: '#F0F0F5' }, ticks: { color: '#6B7280', font: { size: 11 } } },
+                  x: { grid: { display: false }, ticks: { color: '#6B7280', font: { size: 11 } } }
+                },
               }}
             />
           </div>
         </div>
         <div className="chart-card">
-          <h3>Applications Overview</h3>
-          <div style={{ height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Doughnut
+          <h3>Application Activity Trend</h3>
+          <div style={{ height: 250 }}>
+            <Line
               data={{
-                labels: ['Pending', 'Accepted', 'Rejected', 'Reviewed'],
+                labels: stats?.monthly_applications?.map(m => m.month?.split(' ')[0]) || [],
                 datasets: [{
-                  data: [
-                    stats?.pending_applications || 0,
-                    stats?.accepted_applications || 0,
-                    stats?.rejected_applications || 0,
-                    (stats?.total_applications || 0) - (stats?.pending_applications || 0) - (stats?.accepted_applications || 0) - (stats?.rejected_applications || 0),
-                  ],
-                  backgroundColor: ['#F59E0B', '#10B981', '#EF4444', '#3B82F6'],
-                  borderWidth: 0,
+                  label: 'Proposals Sent',
+                  data: stats?.monthly_applications?.map(m => m.count) || [],
+                  borderColor: '#6366F1',
+                  backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                  fill: true,
+                  tension: 0.4,
+                  pointBackgroundColor: '#6366F1',
+                  pointBorderColor: '#fff',
+                  pointRadius: 4,
                 }],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: {
-                  legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                plugins: { legend: { display: false } },
+                scales: {
+                  y: { beginAtZero: true, grid: { color: '#F0F0F5' }, ticks: { color: '#6B7280', font: { size: 11 }, stepSize: 1 } },
+                  x: { grid: { display: false }, ticks: { color: '#6B7280', font: { size: 11 } } }
                 },
-                cutout: '65%',
               }}
             />
           </div>
@@ -270,7 +286,7 @@ const FreelancerDashboard = () => {
       <div className="card" style={{ marginBottom: 24, marginTop: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
           <h3 style={{ fontSize: '1rem' }}>Profile Completion</h3>
-          <span style={{ color: '#2EC4B6', fontWeight: 700 }}>{stats?.profile_completion || 0}%</span>
+          <span style={{ color: 'var(--primary)', fontWeight: 800 }}>{stats?.profile_completion || 0}%</span>
         </div>
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${stats?.profile_completion || 0}%` }}></div>
@@ -355,7 +371,7 @@ const FreelancerDashboard = () => {
                 <tr key={app.id}>
                   <td style={{ fontWeight: 600 }}>{app.job_title}</td>
                   <td style={{ color: '#6B7280' }}>{new Date(app.created_at).toLocaleDateString()}</td>
-                  <td style={{ color: '#2EC4B6', fontWeight: 600 }}>${app.proposed_rate}/hr</td>
+                  <td style={{ color: 'var(--primary)', fontWeight: 700 }}>${app.proposed_rate}/hr</td>
                   <td>
                     <span className={`job-status-badge badge-${app.status}`}>
                       {app.status}
@@ -422,11 +438,11 @@ const FreelancerDashboard = () => {
             animate={{ opacity: 1, x: 0 }}
           >
             <div className="notification-icon" style={{
-              background: notif.notification_type === 'application_accepted' ? 'rgba(16,185,129,0.12)' :
-                         notif.notification_type === 'application_rejected' ? 'rgba(239,68,68,0.12)' :
-                         'rgba(46,196,182,0.12)',
-              color: notif.notification_type === 'application_accepted' ? '#10B981' :
-                     notif.notification_type === 'application_rejected' ? '#EF4444' : '#2EC4B6',
+              background: notif.notification_type === 'application_accepted' ? 'var(--success-soft)' :
+                         notif.notification_type === 'application_rejected' ? 'var(--error-soft)' :
+                         'var(--primary-glow)',
+              color: notif.notification_type === 'application_accepted' ? 'var(--success)' :
+                     notif.notification_type === 'application_rejected' ? 'var(--error)' : 'var(--primary)',
             }}>
               <FiBell />
             </div>
@@ -441,7 +457,7 @@ const FreelancerDashboard = () => {
         ))}
         {filtered.length === 0 && (
           <div className="empty-state">
-            <div className="empty-icon">🔔</div>
+            <div className="empty-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)', padding: 16, borderRadius: '50%' }}><FiBell /></div>
             <h3>No notifications</h3>
             <p>You're all caught up!</p>
           </div>
@@ -462,10 +478,26 @@ const FreelancerDashboard = () => {
           <div className="profile-info">
             <h2>{user?.first_name} {user?.last_name}</h2>
             <p>{profile.title || 'Freelancer'} · {user?.location || 'No location set'}</p>
-            <p style={{ color: '#2EC4B6', fontWeight: 600, marginTop: 4 }}>
+            <p style={{ color: 'var(--primary)', fontWeight: 700, marginTop: 4 }}>
               ${profile.hourly_rate || 0}/hr · {profile.experience_level || 'Entry'} Level
             </p>
           </div>
+          <button 
+            className="btn-secondary" 
+            onClick={handleLogout}
+            style={{ 
+              marginLeft: 'auto', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              color: 'var(--error)',
+              borderColor: 'var(--error-soft)',
+              background: 'var(--error-soft)',
+              fontWeight: 700
+            }}
+          >
+            <FiLogOut /> Sign Out
+          </button>
         </div>
 
         <ProfileForm user={user} profile={profile} onSave={handleProfileUpdate} />
@@ -726,7 +758,7 @@ const FreelancerDashboard = () => {
                     <td style={{ fontWeight: 600 }}>{earning.job_title}</td>
                     <td style={{ color: '#6B7280' }}>{earning.recruiter_name}</td>
                     <td style={{ color: '#6B7280' }}>{earning.hours_worked} hrs</td>
-                    <td style={{ color: '#2EC4B6', fontWeight: 600 }}>${earning.amount}</td>
+                    <td style={{ color: 'var(--primary)', fontWeight: 700 }}>${earning.amount}</td>
                     <td>
                       <span className={`job-status-badge badge-${earning.status === 'paid' ? 'accepted' : earning.status === 'pending' ? 'pending' : earning.status === 'processing' ? 'reviewed' : 'rejected'}`}>
                         {earning.status}
@@ -740,7 +772,7 @@ const FreelancerDashboard = () => {
           </div>
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">💰</div>
+            <div className="empty-icon" style={{ background: 'var(--primary-glow)', color: 'var(--primary)', padding: 16, borderRadius: '50%' }}><FiDollarSign /></div>
             <h3>No earnings yet</h3>
             <p>Once your applications are accepted, you can log hours and request payments here.</p>
           </div>
@@ -757,17 +789,32 @@ const FreelancerDashboard = () => {
                   datasets: [{
                     label: 'Earnings ($)',
                     data: earningsStats?.monthly_earnings?.map(m => m.amount) || [],
-                    backgroundColor: 'rgba(46,196,182,0.7)',
-                    borderColor: '#2EC4B6',
-                    borderWidth: 1,
+                    backgroundColor: [
+                      'rgba(99, 102, 241, 0.85)',
+                      'rgba(13, 148, 136, 0.85)',
+                      'rgba(245, 158, 11, 0.85)',
+                      'rgba(239, 68, 68, 0.85)',
+                      'rgba(16, 185, 129, 0.85)',
+                      'rgba(59, 130, 246, 0.85)',
+                      'rgba(139, 92, 246, 0.85)',
+                      'rgba(236, 72, 153, 0.85)',
+                      'rgba(20, 184, 166, 0.85)',
+                      'rgba(234, 179, 8, 0.85)',
+                      'rgba(249, 115, 22, 0.85)',
+                      'rgba(6, 182, 212, 0.85)',
+                    ],
                     borderRadius: 8,
+                    borderSkipped: false,
                   }],
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
                   plugins: { legend: { display: false } },
-                  scales: { y: { beginAtZero: true, grid: { color: '#F0F0F0' } }, x: { grid: { display: false } } },
+                  scales: {
+                    y: { beginAtZero: true, grid: { color: '#F0F0F5' }, ticks: { color: '#6B7280', font: { size: 11 } } },
+                    x: { grid: { display: false }, ticks: { color: '#6B7280', font: { size: 11 } } }
+                  },
                 }}
               />
             </div>
@@ -784,15 +831,17 @@ const FreelancerDashboard = () => {
                       earningsStats?.pending_amount || 0,
                       earningsStats?.processing_amount || 0,
                     ],
-                    backgroundColor: ['#10B981', '#F59E0B', '#3B82F6'],
-                    borderWidth: 0,
+                    backgroundColor: ['#10B981', '#F59E0B', '#6366F1'],
+                    hoverBackgroundColor: ['#059669', '#D97706', '#4F46E5'],
+                    borderWidth: 2,
+                    borderColor: '#fff',
                   }],
                 }}
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
                   plugins: {
-                    legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle' } },
+                    legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyle: 'circle', font: { size: 12 } } },
                   },
                   cutout: '65%',
                 }}

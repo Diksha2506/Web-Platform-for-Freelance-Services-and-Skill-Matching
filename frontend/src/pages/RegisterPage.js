@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiEye, FiEyeOff, FiUserPlus, FiUser, FiMail, FiLock, FiPhone } from 'react-icons/fi';
-import { HiOutlineBriefcase, HiOutlineCode } from 'react-icons/hi';
+import { LuBriefcase, LuCode } from 'react-icons/lu';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -142,7 +142,7 @@ const RegisterPage = () => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className="role-icon"><HiOutlineCode /></div>
+                    <div className="role-icon"><LuCode /></div>
                     <div className="role-label">Find Work</div>
                     <div className="role-desc">I'm a freelancer</div>
                   </motion.div>
@@ -152,7 +152,7 @@ const RegisterPage = () => {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <div className="role-icon"><HiOutlineBriefcase /></div>
+                    <div className="role-icon"><LuBriefcase /></div>
                     <div className="role-label">Hire Talent</div>
                     <div className="role-desc">I'm a recruiter</div>
                   </motion.div>

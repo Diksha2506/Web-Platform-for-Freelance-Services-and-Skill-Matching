@@ -339,9 +339,25 @@ def mark_all_notifications_read(request):
 @api_view(['GET'])
 def dashboard_stats(request):
     user = request.user
+    now = timezone.now()
 
     if user.role == 'freelancer':
         applications = Application.objects.filter(freelancer=user)
+        
+        # Monthly applications (last 6 months)
+        monthly_apps = []
+        for i in range(5, -1, -1):
+            month_start = (now.replace(day=1) - timezone.timedelta(days=i * 30)).replace(day=1)
+            if i > 0:
+                month_end = (month_start + timezone.timedelta(days=32)).replace(day=1)
+            else:
+                month_end = now
+            count = applications.filter(created_at__gte=month_start, created_at__lt=month_end).count()
+            monthly_apps.append({
+                'month': month_start.strftime('%b %Y'),
+                'count': count,
+            })
+
         return Response({
             'total_applications': applications.count(),
             'pending_applications': applications.filter(status='pending').count(),
@@ -349,16 +365,33 @@ def dashboard_stats(request):
             'rejected_applications': applications.filter(status='rejected').count(),
             'available_jobs': Job.objects.filter(status='open').count(),
             'profile_completion': _get_profile_completion(user),
+            'monthly_applications': monthly_apps,
         })
     elif user.role == 'recruiter':
         jobs = Job.objects.filter(recruiter=user)
         applications = Application.objects.filter(job__recruiter=user)
+        
+        # Monthly job postings (last 6 months)
+        monthly_postings = []
+        for i in range(5, -1, -1):
+            month_start = (now.replace(day=1) - timezone.timedelta(days=i * 30)).replace(day=1)
+            if i > 0:
+                month_end = (month_start + timezone.timedelta(days=32)).replace(day=1)
+            else:
+                month_end = now
+            count = jobs.filter(created_at__gte=month_start, created_at__lt=month_end).count()
+            monthly_postings.append({
+                'month': month_start.strftime('%b %Y'),
+                'count': count,
+            })
+
         return Response({
             'total_jobs_posted': jobs.count(),
             'open_jobs': jobs.filter(status='open').count(),
             'total_applications': applications.count(),
             'pending_applications': applications.filter(status='pending').count(),
             'total_hires': applications.filter(status='accepted').count(),
+            'monthly_postings': monthly_postings,
         })
 
     return Response({'error': 'Invalid role'}, status=status.HTTP_400_BAD_REQUEST)
