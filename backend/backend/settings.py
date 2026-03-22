@@ -5,6 +5,7 @@ Django settings for backend project.
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -94,12 +95,12 @@ TEMPLATES = [
 # WSGI
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# DATABASE (SQLite OK for now)
+# DATABASE (Uses Render's DATABASE_URL if present, else fallback to SQLite)
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        conn_max_age=600
+    )
 }
 
 # CUSTOM USER
