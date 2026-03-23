@@ -50,13 +50,13 @@ MIDDLEWARE = [
 ]
 
 # CORS
-CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     origin
     for origin in os.environ.get(
         "CORS_ALLOWED_ORIGINS",
-        "http://localhost:3000,http://127.0.0.1:3000",
+        "https://web-platform-for-freelance-services-and.onrender.com,https://talentlink-web.onrender.com,http://localhost:3000,http://127.0.0.1:3000",
     ).split(",")
     if origin
 ]
@@ -66,10 +66,16 @@ CSRF_TRUSTED_ORIGINS = [
     origin
     for origin in os.environ.get(
         "CSRF_TRUSTED_ORIGINS",
-        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000",
+        "https://web-platform-for-freelance-services-and.onrender.com,https://talentlink-web.onrender.com,http://localhost:3000,http://127.0.0.1:3000",
     ).split(",")
     if origin
 ]
+
+# Cookie Security (Required for cross-domain sessions)
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -98,7 +104,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # DATABASE (Uses Render's DATABASE_URL if present, else fallback to SQLite)
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        default=os.environ.get("DATABASE_URL", f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
         conn_max_age=600
     )
 }
@@ -144,3 +150,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL (DEV)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# --- TEMP: AUTO RUN MIGRATIONS ON RENDER ---
+import sys
+if 'runserver' not in sys.argv:
+    try:
+        from django.core.management import call_command
+        # This will run migrations automatically whenever the app starts (gunicorn)
+        print("Auto-running migrations...")
+        call_command('migrate', interactive=False)
+    except Exception as e:
+        print(f"Migration error: {e}")
