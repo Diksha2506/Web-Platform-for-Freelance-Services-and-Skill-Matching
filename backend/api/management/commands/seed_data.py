@@ -1,92 +1,209 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from api.models import User, FreelancerProfile, RecruiterProfile, Job, Application, Earning, RecruiterPayment, Interview, Project, Task, Notification, Conversation, Message
-from datetime import timedelta
+from api.models import (
+    User, FreelancerProfile, RecruiterProfile, Job, Application,
+    Notification, Conversation, Message, Earning,
+    Project, Task, Meeting, RecruiterPayment
+)
 import random
+from decimal import Decimal
 
 class Command(BaseCommand):
-    help = 'Seeds a comprehensive, interconnected history between Parth (recruiter) and Diksha (freelancer)'
+    help = 'Seed the database with sample data'
 
     def handle(self, *args, **options):
-        self.stdout.write("Wiping existing workflow data...")
-        [m.objects.all().delete() for m in [Job, Application, Earning, RecruiterPayment, Project, Task, Notification, Conversation, Message, Interview]]
+        self.stdout.write("Seeding data...")
 
-        # 1. Fetch/Create Root Users
-        diksha, _ = User.objects.get_or_create(username='Diksha25', defaults={'first_name': 'Diksha', 'last_name': 'Rade', 'email': 'diksha@gmail.com', 'role': 'freelancer'})
-        parth, _ = User.objects.get_or_create(username='Parth23', defaults={'first_name': 'Parth', 'last_name': 'Rade', 'email': 'parth@gmail.com', 'role': 'recruiter'})
-        
-        # 2. Setup Profiles if missing
-        FreelancerProfile.objects.get_or_create(user=diksha, defaults={'title': 'Senior Full Stack Developer', 'skills': ['React', 'Django', 'AWS'], 'hourly_rate': 85})
-        RecruiterProfile.objects.get_or_create(user=parth, defaults={'company_name': 'Rade Technologies', 'industry': 'CleanTech'})
+        # 1. Create/Get Key Users
+        diksha, _ = User.objects.get_or_create(
+            username='Diksha25',
+            defaults={
+                'email': 'diksha@example.com',
+                'first_name': 'Diksha',
+                'last_name': 'Sharma',
+                'role': 'recruiter',
+                'location': 'New Delhi, India',
+                'bio': 'Experienced Tech Recruiter looking for elite freelancers.'
+            }
+        )
+        diksha.set_password('password123')
+        diksha.save()
+        RecruiterProfile.objects.get_or_create(user=diksha, defaults={'company_name': 'D-Tech Solutions', 'industry': 'Technology', 'company_size': '50-100'})
 
-        parth_job_data = [
-            ("Cloud Infra Setup", "Scalable cloud architecture using AWS."),
-            ("Dashboard Redesign", "Modernize the UI with React and Tailwind."),
-            ("Backend Optimization", "Refactor core Python APIs for efficiency."),
-            ("Mobile Sync Module", "Enable real-time data sync for mobile clients.")
+        parth, _ = User.objects.get_or_create(
+            username='Parth25',
+            defaults={
+                'email': 'parth@example.com',
+                'first_name': 'Parth',
+                'last_name': 'Verma',
+                'role': 'freelancer',
+                'location': 'Mumbai, India',
+                'bio': 'Full-stack Developer with 5 years of experience in React and Django.'
+            }
+        )
+        parth.set_password('password123')
+        parth.save()
+        FreelancerProfile.objects.get_or_create(
+            user=parth, 
+            defaults={
+                'title': 'Senior Full-Stack Developer', 
+                'skills': ['React', 'Django', 'PostgreSQL', 'Python'],
+                'hourly_rate': Decimal('45.00'),
+                'experience_level': 'expert',
+                'years_of_experience': 5
+            }
+        )
+
+        # Create some other users for variety
+        other_recruiters = []
+        for i in range(3):
+            u, _ = User.objects.get_or_create(
+                username=f'Recruiter{i}',
+                defaults={'role': 'recruiter', 'first_name': f'Recruiter_{i}'}
+            )
+            u.set_password('password123')
+            u.save()
+            RecruiterProfile.objects.get_or_create(user=u, defaults={'company_name': f'Company {i}'})
+            other_recruiters.append(u)
+
+        other_freelancers = []
+        for i in range(5):
+            u, _ = User.objects.get_or_create(
+                username=f'Freelancer{i}',
+                defaults={'role': 'freelancer', 'first_name': f'Freelancer_{i}'}
+            )
+            u.set_password('password123')
+            u.save()
+            FreelancerProfile.objects.get_or_create(user=u, defaults={'title': f'Developer {i}', 'skills': ['JavaScript', 'Python']})
+            other_freelancers.append(u)
+
+        # 2. Add 20 Jobs
+        job_titles = [
+            "React Frontend Developer", "Django Backend Specialist", "Full-Stack Web Architect",
+            "Mobile App Developer (Flutter)", "UI/UX Designer for Web App", "DevOps Engineer for Cloud Setup",
+            "Python Data Analyst", "E-commerce Website Builder", "GraphQL Integration Expert",
+            "Next.js Portfolio Site", "REST API Developer", "Database Optimization Guru",
+            "Cybersecurity Consultant", "SEO Optimization Specialist", "Content Management System Admin",
+            "Cloud Migration Expert", "Automated Testing Engineer", "AI Model Deployment Expert",
+            "Blockchain Smart Contract Dev", "DevSecOps Lead"
         ]
 
-        now = timezone.now()
-        self.stdout.write(f"Seeding 20 detailed project lifecycles over the past year...")
+        jobs = []
+        for i, title in enumerate(job_titles):
+            recruiter = diksha if i % 2 == 0 else random.choice(other_recruiters)
+            job, _ = Job.objects.get_or_create(
+                title=title,
+                recruiter=recruiter,
+                defaults={
+                    'description': f"This is a sample description for {title}. We need an expert who can deliver high quality work within deadlines.",
+                    'required_skills': ['Python', 'JavaScript'] if i % 3 == 0 else ['React', 'CSS'],
+                    'pay_per_hour': Decimal(random.randint(20, 100)),
+                    'experience_level': random.choice(['entry', 'intermediate', 'expert']),
+                    'job_type': random.choice(['full_time', 'part_time', 'contract', 'freelance']),
+                    'status': 'open' if i < 18 else 'closed'
+                }
+            )
+            jobs.append(job)
 
-        for i in range(20):
-            # Calculate a unique date for this specific project cycle
-            creation_date = (now - timedelta(days=365)) + timedelta(days=i * 18)
-            title_base, desc_base = parth_job_data[i % 4]
-            title = f"{title_base} - Cycle {i+1}"
+        # 3. Add Applications
+        # Parth25 applies to some of Diksha's and others' jobs
+        for i, job in enumerate(jobs[:10]):
+            status = 'pending'
+            if i == 0: status = 'accepted'
+            if i == 1: status = 'reviewed'
+            if i == 2: status = 'rejected'
 
-            # STEP 1: Job Posting
-            job = Job.objects.create(recruiter=parth, title=title, description=desc_base, pay_per_hour=90 + (i % 3)*10, status='closed' if i < 18 else 'open')
-            Job.objects.filter(pk=job.pk).update(created_at=creation_date)
+            app, created = Application.objects.get_or_create(
+                job=job,
+                freelancer=parth,
+                defaults={
+                    'cover_letter': f"Hi, I am interested in {job.title}. I have relevant experience in this stack.",
+                    'proposed_rate': job.pay_per_hour,
+                    'status': status
+                }
+            )
+            if created:
+                job.applicants_count += 1
+                job.save()
 
-            # STEP 2: Application
-            app = Application.objects.create(job=job, freelancer=diksha, status='accepted' if i < 16 else 'pending' if i < 19 else 'rejected', cover_letter=f"Hi Parth, I'm the perfect fit for {title}.")
-            Application.objects.filter(pk=app.pk).update(created_at=creation_date + timedelta(days=1))
+        # Other freelancers apply too
+        for job in jobs[10:15]:
+            for freelancer in random.sample(other_freelancers, 2):
+                app, created = Application.objects.get_or_create(
+                    job=job,
+                    freelancer=freelancer,
+                    defaults={'cover_letter': "I'm the best for this job."}
+                )
+                if created:
+                    job.applicants_count += 1
+                    job.save()
 
-            # STEP 3: Interview Lifecycle
-            status_iv = 'completed' if i < 17 else 'scheduled'
-            iv_date = creation_date + timedelta(days=3)
-            if i == 19: iv_date = now + timedelta(days=1) # One upcoming interview tomorrow
+        # 4. Conversations & Messages
+        accepted_app = Application.objects.filter(freelancer=parth, status='accepted').first()
+        if accepted_app:
+            convo, _ = Conversation.objects.get_or_create(
+                application=accepted_app,
+                defaults={
+                    'freelancer': parth,
+                    'recruiter': accepted_app.job.recruiter,
+                    'job': accepted_app.job
+                }
+            )
+            # Create messages but don't duplicate on multiple runs
+            if not Message.objects.filter(conversation=convo).exists():
+                Message.objects.create(conversation=convo, sender=parth, content="Hi Diksha, thanks for accepting my application!")
+                Message.objects.create(conversation=convo, sender=diksha, content="Welcome Parth! Looking forward to working together.")
+                Message.objects.create(conversation=convo, sender=diksha, content="Can we discuss the project timeline?")
+
+        # 5. Projects & Tasks
+        if accepted_app:
+            project, _ = Project.objects.get_or_create(
+                client=diksha,
+                title=f"Project: {accepted_app.job.title}",
+                defaults={
+                    'description': "Full implementation of the requested features.",
+                    'status': 'active',
+                    'planned_hours': Decimal('40.0'),
+                    'progress': 25
+                }
+            )
+            Task.objects.get_or_create(project=project, title="Initial Setup", defaults={'assigned_to': parth, 'is_completed': True, 'hours': Decimal('5.0')})
+            Task.objects.get_or_create(project=project, title="Frontend Components", defaults={'assigned_to': parth, 'is_completed': False, 'hours': Decimal('15.0')})
             
-            iv = Interview.objects.create(application=app, job=job, freelancer=diksha, recruiter=parth, scheduled_at=iv_date, status=status_iv, notes="Very technical candidate.")
-            Interview.objects.filter(pk=iv.pk).update(created_at=creation_date + timedelta(days=2))
-            
-            # Interview Notification
-            Notification.objects.create(user=diksha, title="Interview Scheduled", message=f"Parth invited you for {title}", notification_type='message', related_job=job, created_at=creation_date + timedelta(days=2))
+            Meeting.objects.get_or_create(
+                project=project,
+                topic="Kickoff Meeting",
+                defaults={'timing': timezone.now() + timezone.timedelta(days=1), 'description': "Discussing project requirements."}
+            )
 
-            # STEP 4: Project & Hired Workflow
-            if app.status == 'accepted':
-                # Hired Notification
-                Notification.objects.create(user=diksha, title="You're Hired!", message=f"Parth accepted your proposal for {title}", notification_type='application_accepted', related_job=job, created_at=creation_date + timedelta(days=4))
-                
-                project = Project.objects.create(client=parth, title=f"Active: {title}", status='completed' if i < 14 else 'active', progress=100 if i < 14 else 45, deadline=creation_date.date() + timedelta(days=45))
-                Project.objects.filter(pk=project.pk).update(created_at=creation_date + timedelta(days=5))
+        # 6. Earnings for Parth
+        if accepted_app:
+            Earning.objects.get_or_create(
+                freelancer=parth,
+                job=accepted_app.job,
+                application=accepted_app,
+                description="Phase 1: Initial Setup",
+                defaults={
+                    'amount': Decimal('225.00'),
+                    'hours_worked': Decimal('5.0'),
+                    'status': 'paid',
+                    'paid_at': timezone.now()
+                }
+            )
+            Earning.objects.get_or_create(
+                freelancer=parth,
+                job=accepted_app.job,
+                application=accepted_app,
+                description="Phase 2: Ongoing development",
+                defaults={
+                    'amount': Decimal('450.00'),
+                    'hours_worked': Decimal('10.0'),
+                    'status': 'pending'
+                }
+            )
 
-                Task.objects.create(project=project, title="Core Logic Implementation", assigned_to=diksha, is_completed=(i < 14), due_date=project.deadline)
+        # 7. Notifications
+        Notification.objects.create(user=parth, notification_type='application_accepted', title='Application Accepted', message=f'Your application for {jobs[0].title} was accepted!', related_job=jobs[0])
+        Notification.objects.create(user=diksha, notification_type='application_received', title='New Application', message=f'Parth25 applied for {jobs[5].title}', related_job=jobs[5])
 
-                # STEP 5: Payment Flow
-                amount = 2000 + (i * 200)
-                is_paid = i < 13
-                
-                # Payment Request (Earning)
-                earning = Earning.objects.create(freelancer=diksha, job=job, application=app, amount=amount, status='paid' if is_paid else 'pending', description=f"Milestone {i+1} for {title}")
-                Earning.objects.filter(pk=earning.pk).update(created_at=creation_date + timedelta(days=20), paid_at=(creation_date + timedelta(days=21)) if is_paid else None)
-
-                # Recruiter outgoing record
-                pay = RecruiterPayment.objects.create(user=parth, amount=amount, status='completed' if is_paid else 'pending', description=f"Payment to Diksha for {title}")
-                RecruiterPayment.objects.filter(pk=pay.pk).update(created_at=creation_date + timedelta(days=20))
-
-                # Payment Notification
-                if is_paid:
-                    Notification.objects.create(user=diksha, title="Payment Received", message=f"You received ${amount} for {title}", notification_type='message', related_job=job, created_at=creation_date + timedelta(days=21))
-
-            # STEP 6: Real-time Messages
-            conv, _ = Conversation.objects.get_or_create(application=app, freelancer=diksha, recruiter=parth, job=job)
-            Message.objects.create(conversation=conv, sender=parth, content=f"Let's start the work on {title}!")
-            Message.objects.create(conversation=conv, sender=diksha, content="Absolutely, starting the initial setup now.")
-
-        # Ensure active notifications for today
-        Notification.objects.create(user=diksha, title="New Payment Request Approved", message="Parth has approved your latest payment request.", notification_type='message', created_at=now)
-        Notification.objects.create(user=parth, title="New Proposal Received", message="Diksha submitted a proposal for Server Security Review.", notification_type='application_received', created_at=now)
-
-        self.stdout.write(self.style.SUCCESS("Database is now fully populated with a coordinated 1-year history between Parth and Diksha."))
+        self.stdout.write(self.style.SUCCESS('Successfully seeded database with real-world sample data!'))
