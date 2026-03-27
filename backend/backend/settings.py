@@ -15,8 +15,8 @@ load_dotenv(BASE_DIR / '.env')
 # SECURITY
 SECRET_KEY = os.environ.get("SECRET_KEY", "fallback-dev-key-change-in-production")
 
-# DEBUG (change to False after debugging)
-DEBUG = True
+# DEBUG (read from env, default False)
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
@@ -82,11 +82,11 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # URL CONFIG
 ROOT_URLCONF = 'backend.urls'
 
-# TEMPLATES (FIXED ISSUE HERE)
+# TEMPLATES (serve frontend_build)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # ✅ FIXED (no frontend_build dependency)
+        'DIRS': [os.path.join(BASE_DIR, 'frontend_build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,11 +101,13 @@ TEMPLATES = [
 # WSGI
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# DATABASE (Uses Render's DATABASE_URL if present, else fallback to SQLite)
+# DATABASE CONFIGURATION
+# Uses DATABASE_URL environment variable if present, falls back to SQLite
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get("DATABASE_URL", f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
-        conn_max_age=600
+        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        conn_max_age=600,
+        conn_health_checks=True,
     )
 }
 
@@ -139,7 +141,13 @@ USE_TZ = True
 # STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+if os.path.exists(os.path.join(BASE_DIR, 'frontend_build')):
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'frontend_build'),
+        os.path.join(BASE_DIR, 'frontend_build', 'static'),
+    ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_INDEX_FILE = True
 
 # MEDIA
 MEDIA_URL = '/media/'
