@@ -143,7 +143,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 if os.path.exists(os.path.join(BASE_DIR, 'frontend_build')):
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'frontend_build'),
         os.path.join(BASE_DIR, 'frontend_build', 'static'),
     ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
