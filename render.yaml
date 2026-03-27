@@ -11,7 +11,7 @@ services:
     plan: free
     rootDir: .
     buildCommand: bash build.sh
-    startCommand: gunicorn backend.wsgi:application --chdir backend
+    startCommand: python backend/manage.py migrate && gunicorn backend.wsgi:application --chdir backend
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.3
