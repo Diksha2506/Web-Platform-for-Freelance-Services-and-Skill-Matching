@@ -141,11 +141,13 @@ USE_TZ = True
 # STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-if os.path.exists(os.path.join(BASE_DIR, 'frontend_build')):
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'frontend_build', 'static'),
-    ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend_build/static'),
+]
+
+import whitenoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 WHITENOISE_INDEX_FILE = True
 
 # MEDIA

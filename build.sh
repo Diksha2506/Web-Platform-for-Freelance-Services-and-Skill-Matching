@@ -1,23 +1,30 @@
 #!/usr/bin/env bash
-# exit on error
 set -o errexit
 
-# Install Python dependencies
-python -m pip install --upgrade pip
+# Install backend dependencies
 pip install -r backend/requirements.txt
 
-# Build Frontend
+# Build frontend
 cd frontend
-npm ci
+npm install
 npm run build
 cd ..
 
-# Copy frontend build to backend
+# Debug (IMPORTANT - will show in Render logs)
+echo "Listing frontend build:"
+ls frontend/build
+ls frontend/build/static
+
+# Copy frontend build into backend
 rm -rf backend/frontend_build
 mkdir -p backend/frontend_build
 cp -r frontend/build/* backend/frontend_build/
 
-# Move to backend for Django tasks
+# Debug again
+echo "Listing backend/frontend_build:"
+ls backend/frontend_build
+ls backend/frontend_build/static
+
+# Django setup
 cd backend
-python manage.py collectstatic --no-input
-# python manage.py migrate # Migrations are handled in settings.py or at startup
+python manage.py collectstatic --noinput
