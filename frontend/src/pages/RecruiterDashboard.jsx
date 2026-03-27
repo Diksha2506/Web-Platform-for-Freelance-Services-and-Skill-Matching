@@ -848,8 +848,6 @@ const RecruiterDashboard = () => {
           subtitle={activeTab === 'overview' ? 'Manage your projects and proposals' : undefined}
           unreadCount={unreadCount}
           onNotificationClick={() => setActiveTab('notifications')}
-          actionLabel="Post New Job"
-          onActionClick={() => setActiveTab('create-job')}
           onProfileClick={() => setActiveTab('profile')}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}

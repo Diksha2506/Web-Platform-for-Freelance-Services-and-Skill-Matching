@@ -9,201 +9,242 @@ import random
 from decimal import Decimal
 
 class Command(BaseCommand):
-    help = 'Seed the database with sample data'
+    help = 'Seed the database with sample data, including parth23 as a recruiter with 20 jobs'
 
     def handle(self, *args, **options):
         self.stdout.write("Seeding data...")
 
-        # 1. Create/Get Key Users
-        diksha, _ = User.objects.get_or_create(
-            username='Diksha25',
+        # 1. Create/Get parth23 (Recruiter)
+        parth23, created = User.objects.get_or_create(
+            username='parth23',
             defaults={
-                'email': 'diksha@example.com',
-                'first_name': 'Diksha',
-                'last_name': 'Sharma',
-                'role': 'recruiter',
-                'location': 'New Delhi, India',
-                'bio': 'Experienced Tech Recruiter looking for elite freelancers.'
-            }
-        )
-        diksha.set_password('password123')
-        diksha.save()
-        RecruiterProfile.objects.get_or_create(user=diksha, defaults={'company_name': 'D-Tech Solutions', 'industry': 'Technology', 'company_size': '50-100'})
-
-        parth, _ = User.objects.get_or_create(
-            username='Parth25',
-            defaults={
-                'email': 'parth@example.com',
+                'email': 'parth23@example.com',
                 'first_name': 'Parth',
                 'last_name': 'Verma',
-                'role': 'freelancer',
+                'role': 'recruiter',
                 'location': 'Mumbai, India',
-                'bio': 'Full-stack Developer with 5 years of experience in React and Django.'
+                'bio': 'Senior Tech Recruiter specialized in hiring top-tier software engineers and designers.'
             }
         )
-        parth.set_password('password123')
-        parth.save()
-        FreelancerProfile.objects.get_or_create(
-            user=parth, 
+        parth23.set_password('password123')
+        parth23.save()
+        
+        RecruiterProfile.objects.update_or_create(
+            user=parth23, 
             defaults={
-                'title': 'Senior Full-Stack Developer', 
-                'skills': ['React', 'Django', 'PostgreSQL', 'Python'],
-                'hourly_rate': Decimal('45.00'),
-                'experience_level': 'expert',
-                'years_of_experience': 5
+                'company_name': 'Parth Tech Solutions', 
+                'industry': 'Software Development', 
+                'company_size': '200-500',
+                'company_website': 'https://parthtech.example.com'
             }
         )
 
-        # Create some other users for variety
-        other_recruiters = []
-        for i in range(3):
-            u, _ = User.objects.get_or_create(
-                username=f'Recruiter{i}',
-                defaults={'role': 'recruiter', 'first_name': f'Recruiter_{i}'}
-            )
-            u.set_password('password123')
-            u.save()
-            RecruiterProfile.objects.get_or_create(user=u, defaults={'company_name': f'Company {i}'})
-            other_recruiters.append(u)
-
-        other_freelancers = []
-        for i in range(5):
-            u, _ = User.objects.get_or_create(
-                username=f'Freelancer{i}',
-                defaults={'role': 'freelancer', 'first_name': f'Freelancer_{i}'}
-            )
-            u.set_password('password123')
-            u.save()
-            FreelancerProfile.objects.get_or_create(user=u, defaults={'title': f'Developer {i}', 'skills': ['JavaScript', 'Python']})
-            other_freelancers.append(u)
-
-        # 2. Add 20 Jobs
-        job_titles = [
-            "React Frontend Developer", "Django Backend Specialist", "Full-Stack Web Architect",
-            "Mobile App Developer (Flutter)", "UI/UX Designer for Web App", "DevOps Engineer for Cloud Setup",
-            "Python Data Analyst", "E-commerce Website Builder", "GraphQL Integration Expert",
-            "Next.js Portfolio Site", "REST API Developer", "Database Optimization Guru",
-            "Cybersecurity Consultant", "SEO Optimization Specialist", "Content Management System Admin",
-            "Cloud Migration Expert", "Automated Testing Engineer", "AI Model Deployment Expert",
-            "Blockchain Smart Contract Dev", "DevSecOps Lead"
+        # 2. Add 20 Realistic Jobs for parth23
+        realistic_jobs = [
+            {
+                "title": "Senior React.js Developer",
+                "description": "We are seeking an expert React developer to lead the development of our core dashboard. Must have experience with Redux Toolkit and Framer Motion.",
+                "required_skills": ["React", "Redux", "Framer Motion", "Tailwind CSS"],
+                "pay": 65,
+                "level": "expert",
+                "type": "contract"
+            },
+            {
+                "title": "Django Backend Architect",
+                "description": "Looking for a seasoned Django developer to design and implement complex API architectures and database schemas using PostgreSQL.",
+                "required_skills": ["Django", "Python", "PostgreSQL", "DRF"],
+                "pay": 70,
+                "level": "expert",
+                "type": "full_time"
+            },
+            {
+                "title": "Flutter Mobile App Specialist",
+                "description": "Need a cross-platform mobile developer to build a high-performance e-commerce app with Flutter. Experience with Firebase and Bloc is a plus.",
+                "required_skills": ["Flutter", "Dart", "Firebase", "Bloc"],
+                "pay": 55,
+                "level": "intermediate",
+                "type": "freelance"
+            },
+            {
+                "title": "UI/UX Product Designer",
+                "description": "Join our creative team to design modern, user-centric interfaces for our upcoming SaaS product. Mastery of Figma and Adobe XD is required.",
+                "required_skills": ["Figma", "UI Design", "UX Research", "Prototyping"],
+                "pay": 50,
+                "level": "intermediate",
+                "type": "part_time"
+            },
+            {
+                "title": "DevOps Engineer (AWS Cloud)",
+                "description": "Help us automate our deployment pipelines and manage our cloud infrastructure on AWS. Strong experience with Docker and Kubernetes needed.",
+                "required_skills": ["AWS", "Docker", "Kubernetes", "CI/CD"],
+                "pay": 80,
+                "level": "expert",
+                "type": "contract"
+            },
+            {
+                "title": "Data Scientist - Machine Learning",
+                "description": "Analyze large datasets and build predictive models to enhance our customer insights engine. Proficiency in Python and Scikit-learn is essential.",
+                "required_skills": ["Python", "TensorFlow", "Pandas", "Statistical Analysis"],
+                "pay": 75,
+                "level": "expert",
+                "type": "full_time"
+            },
+            {
+                "title": "Full-Stack MERN Developer",
+                "description": "Work on both frontend and backend of our internal tools. Familiarity with Node.js, Express, and MongoDB is a must.",
+                "required_skills": ["MongoDB", "Express", "React", "Node.js"],
+                "pay": 45,
+                "level": "intermediate",
+                "type": "freelance"
+            },
+            {
+                "title": "Cybersecurity Consultant",
+                "description": "Perform security audits and implement robust protection measures for our financial application. Expertise in network security required.",
+                "required_skills": ["Penetration Testing", "Network Security", "Risk Assessment"],
+                "pay": 90,
+                "level": "expert",
+                "type": "contract"
+            },
+            {
+                "title": "Blockchain/Solidity Developer",
+                "description": "Develop and deploy smart contracts for our decentralized finance (DeFi) project. Strong understanding of Ethereum and Web3.js.",
+                "required_skills": ["Solidity", "Ethereum", "Web3.js", "Truffle"],
+                "pay": 85,
+                "level": "expert",
+                "type": "freelance"
+            },
+            {
+                "title": "AI/ML Engineer (PyTorch focus)",
+                "description": "Implement cutting-edge computer vision algorithms using PyTorch. Experience with GANs and image processing is preferred.",
+                "required_skills": ["PyTorch", "Computer Vision", "Deep Learning"],
+                "pay": 80,
+                "level": "expert",
+                "type": "full_time"
+            },
+            {
+                "title": "Technical Product Manager",
+                "description": "Bridge the gap between business requirements and technical implementation. Lead agile sprints and define product roadmaps.",
+                "required_skills": ["Agile", "Scrum", "Jira", "Stakeholder Management"],
+                "pay": 60,
+                "level": "intermediate",
+                "type": "full_time"
+            },
+            {
+                "title": "QA Automation Engineer",
+                "description": "Ensure the quality of our web applications by building automated test suites with Selenium and Cypress.",
+                "required_skills": ["Selenium", "Cypress", "JavaScript", "Automation Testing"],
+                "pay": 40,
+                "level": "intermediate",
+                "type": "contract"
+            },
+            {
+                "title": "SEO & Digital Search Specialist",
+                "description": "Optimize our online presence to drive organic traffic. Strong knowledge of Google Search Console and keyword research tools.",
+                "required_skills": ["SEO", "Google Analytics", "Keyword Research"],
+                "pay": 35,
+                "level": "entry",
+                "type": "freelance"
+            },
+            {
+                "title": "Content Strategy Specialist",
+                "description": "Develop and manage our content pipeline across all channels. Excellent writing skills and marketing knowledge requested.",
+                "required_skills": ["Content Marketing", "Copywriting", "Branding"],
+                "pay": 30,
+                "level": "entry",
+                "type": "part_time"
+            },
+            {
+                "title": "Technical Writer (API Documentation)",
+                "description": "Create clear and concise documentation for our public APIs and developer portals. Familiarity with Swagger/OpenAPI is needed.",
+                "required_skills": ["Technical Writing", "Swagger", "Markdown", "Git"],
+                "pay": 40,
+                "level": "intermediate",
+                "type": "contract"
+            },
+            {
+                "title": "Frontend Architect (Next.js/TS)",
+                "description": "Design the frontend architecture for our large-scale enterprise application using Next.js and TypeScript.",
+                "required_skills": ["Next.js", "TypeScript", "Architectural Design"],
+                "pay": 75,
+                "level": "expert",
+                "type": "contract"
+            },
+            {
+                "title": "Database Admin (PostgreSQL)",
+                "description": "Manage our database clusters, ensure high availability, and perform performance tuning on massive datasets.",
+                "required_skills": ["PostgreSQL", "Database Tuning", "Linux", "Optimization"],
+                "pay": 65,
+                "level": "expert",
+                "type": "full_time"
+            },
+            {
+                "title": "Cloud Architect (Azure Solutions)",
+                "description": "Design and oversee our migration to Azure Cloud. Implementation of IaaS and PaaS solutions.",
+                "required_skills": ["Azure", "Cloud Architecture", "Identity Management"],
+                "pay": 85,
+                "level": "expert",
+                "type": "contract"
+            },
+            {
+                "title": "Graphic Designer (Visual Branding)",
+                "description": "Create stunning visual assets for our brand identity, including logos, social media graphics, and marketing materials.",
+                "required_skills": ["Adobe Illustrator", "Photoshop", "Branding", "Layout Design"],
+                "pay": 35,
+                "level": "entry",
+                "type": "freelance"
+            },
+            {
+                "title": "Mobile App UI/UX Designer",
+                "description": "Specialize in designing engaging and intuitive mobile experiences for iOS and Android platforms.",
+                "required_skills": ["Mobile Design", "Prototyping", "User Interaction"],
+                "pay": 48,
+                "level": "intermediate",
+                "type": "freelance"
+            }
         ]
 
-        jobs = []
-        for i, title in enumerate(job_titles):
-            recruiter = diksha if i % 2 == 0 else random.choice(other_recruiters)
-            job, _ = Job.objects.get_or_create(
-                title=title,
-                recruiter=recruiter,
+        # Clear existing jobs if needed or just add new ones
+        # For simplicity, we'll just add them. If they exist, get_or_create handles it.
+        
+        for job_data in realistic_jobs:
+            Job.objects.get_or_create(
+                title=job_data["title"],
+                recruiter=parth23,
                 defaults={
-                    'description': f"This is a sample description for {title}. We need an expert who can deliver high quality work within deadlines.",
-                    'required_skills': ['Python', 'JavaScript'] if i % 3 == 0 else ['React', 'CSS'],
-                    'pay_per_hour': Decimal(random.randint(20, 100)),
-                    'experience_level': random.choice(['entry', 'intermediate', 'expert']),
-                    'job_type': random.choice(['full_time', 'part_time', 'contract', 'freelance']),
-                    'status': 'open' if i < 18 else 'closed'
-                }
-            )
-            jobs.append(job)
-
-        # 3. Add Applications
-        # Parth25 applies to some of Diksha's and others' jobs
-        for i, job in enumerate(jobs[:10]):
-            status = 'pending'
-            if i == 0: status = 'accepted'
-            if i == 1: status = 'reviewed'
-            if i == 2: status = 'rejected'
-
-            app, created = Application.objects.get_or_create(
-                job=job,
-                freelancer=parth,
-                defaults={
-                    'cover_letter': f"Hi, I am interested in {job.title}. I have relevant experience in this stack.",
-                    'proposed_rate': job.pay_per_hour,
-                    'status': status
-                }
-            )
-            if created:
-                job.applicants_count += 1
-                job.save()
-
-        # Other freelancers apply too
-        for job in jobs[10:15]:
-            for freelancer in random.sample(other_freelancers, 2):
-                app, created = Application.objects.get_or_create(
-                    job=job,
-                    freelancer=freelancer,
-                    defaults={'cover_letter': "I'm the best for this job."}
-                )
-                if created:
-                    job.applicants_count += 1
-                    job.save()
-
-        # 4. Conversations & Messages
-        accepted_app = Application.objects.filter(freelancer=parth, status='accepted').first()
-        if accepted_app:
-            convo, _ = Conversation.objects.get_or_create(
-                application=accepted_app,
-                defaults={
-                    'freelancer': parth,
-                    'recruiter': accepted_app.job.recruiter,
-                    'job': accepted_app.job
-                }
-            )
-            # Create messages but don't duplicate on multiple runs
-            if not Message.objects.filter(conversation=convo).exists():
-                Message.objects.create(conversation=convo, sender=parth, content="Hi Diksha, thanks for accepting my application!")
-                Message.objects.create(conversation=convo, sender=diksha, content="Welcome Parth! Looking forward to working together.")
-                Message.objects.create(conversation=convo, sender=diksha, content="Can we discuss the project timeline?")
-
-        # 5. Projects & Tasks
-        if accepted_app:
-            project, _ = Project.objects.get_or_create(
-                client=diksha,
-                title=f"Project: {accepted_app.job.title}",
-                defaults={
-                    'description': "Full implementation of the requested features.",
-                    'status': 'active',
-                    'planned_hours': Decimal('40.0'),
-                    'progress': 25
-                }
-            )
-            Task.objects.get_or_create(project=project, title="Initial Setup", defaults={'assigned_to': parth, 'is_completed': True, 'hours': Decimal('5.0')})
-            Task.objects.get_or_create(project=project, title="Frontend Components", defaults={'assigned_to': parth, 'is_completed': False, 'hours': Decimal('15.0')})
-            
-            Meeting.objects.get_or_create(
-                project=project,
-                topic="Kickoff Meeting",
-                defaults={'timing': timezone.now() + timezone.timedelta(days=1), 'description': "Discussing project requirements."}
-            )
-
-        # 6. Earnings for Parth
-        if accepted_app:
-            Earning.objects.get_or_create(
-                freelancer=parth,
-                job=accepted_app.job,
-                application=accepted_app,
-                description="Phase 1: Initial Setup",
-                defaults={
-                    'amount': Decimal('225.00'),
-                    'hours_worked': Decimal('5.0'),
-                    'status': 'paid',
-                    'paid_at': timezone.now()
-                }
-            )
-            Earning.objects.get_or_create(
-                freelancer=parth,
-                job=accepted_app.job,
-                application=accepted_app,
-                description="Phase 2: Ongoing development",
-                defaults={
-                    'amount': Decimal('450.00'),
-                    'hours_worked': Decimal('10.0'),
-                    'status': 'pending'
+                    'description': job_data["description"],
+                    'required_skills': job_data["required_skills"],
+                    'pay_per_hour': Decimal(str(job_data["pay"])),
+                    'experience_level': job_data["level"],
+                    'job_type': job_data["type"],
+                    'status': 'open',
+                    'location': random.choice(['Remote', 'Mumbai, IN', 'Bangalore, IN', 'New York, US', 'London, UK'])
                 }
             )
 
-        # 7. Notifications
-        Notification.objects.create(user=parth, notification_type='application_accepted', title='Application Accepted', message=f'Your application for {jobs[0].title} was accepted!', related_job=jobs[0])
-        Notification.objects.create(user=diksha, notification_type='application_received', title='New Application', message=f'Parth25 applied for {jobs[5].title}', related_job=jobs[5])
+        # 3. Create a Freelancer (Parth25) to see these jobs
+        parth_freelancer, _ = User.objects.get_or_create(
+            username='Parth25',
+            defaults={
+                'email': 'parth25@example.com',
+                'first_name': 'Parth',
+                'last_name': 'Freelancer',
+                'role': 'freelancer',
+                'location': 'Bangalore, India',
+                'bio': 'Experienced Full-stack developer looking for exciting projects.'
+            }
+        )
+        parth_freelancer.set_password('password123')
+        parth_freelancer.save()
+        
+        FreelancerProfile.objects.update_or_create(
+            user=parth_freelancer,
+            defaults={
+                'title': 'Senior Full-Stack Developer',
+                'skills': ['React', 'Python', 'Django', 'Node.js'],
+                'hourly_rate': Decimal('45.00'),
+                'experience_level': 'expert',
+                'years_of_experience': 7
+            }
+        )
 
-        self.stdout.write(self.style.SUCCESS('Successfully seeded database with real-world sample data!'))
+        self.stdout.write(self.style.SUCCESS('Successfully seeded database with 20 realistic jobs for parth23!'))

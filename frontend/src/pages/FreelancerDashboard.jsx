@@ -42,6 +42,7 @@ const FreelancerDashboard = () => {
   const [selectedFreelancerProject, setSelectedFreelancerProject] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [interviews, setInterviews] = useState([]);
+  const [selectedJobDetails, setSelectedJobDetails] = useState(null);
 
   const navItems = [
     { id: 'overview', label: 'Overview', icon: <LuLayoutDashboard /> },
@@ -300,7 +301,12 @@ const FreelancerDashboard = () => {
       </div>
       <div className="jobs-grid">
         {jobs.slice(0, 4).map((job) => (
-          <JobCard key={job.id} job={job} onApply={() => setApplyModal(job)} />
+          <JobCard
+            key={job.id}
+            job={job}
+            onViewDetails={() => setSelectedJobDetails(job)}
+            onApply={(e) => { e.stopPropagation(); setApplyModal(job); }}
+          />
         ))}
         {jobs.length === 0 && (
           <div className="empty-state">
@@ -329,7 +335,12 @@ const FreelancerDashboard = () => {
         </div>
         <div className="jobs-grid">
           {filtered.map((job) => (
-            <JobCard key={job.id} job={job} onApply={() => setApplyModal(job)} />
+            <JobCard
+              key={job.id}
+              job={job}
+              onViewDetails={() => setSelectedJobDetails(job)}
+              onApply={(e) => { e.stopPropagation(); setApplyModal(job); }}
+            />
           ))}
           {filtered.length === 0 && (
             <div className="empty-state">
@@ -1183,15 +1194,120 @@ const FreelancerDashboard = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Job Details Modal */}
+      <AnimatePresence>
+        {selectedJobDetails && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedJobDetails(null)}
+          >
+            <motion.div
+              className="modal"
+              style={{ maxWidth: '700px', width: '90%' }}
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
+                <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+                  <div className="company-avatar" style={{ width: 60, height: 60, fontSize: '1.5rem' }}>
+                    {selectedJobDetails.company_name?.[0] || 'C'}
+                  </div>
+                  <div>
+                    <h2 style={{ marginBottom: 4 }}>{selectedJobDetails.title}</h2>
+                    <p style={{ color: 'var(--primary)', fontWeight: 700 }}>
+                      {selectedJobDetails.company_name} · {selectedJobDetails.location || 'Remote'}
+                    </p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setSelectedJobDetails(null)}
+                  style={{ background: 'none', fontSize: '1.5rem', color: '#9CA3AF' }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 16, marginBottom: 32, padding: 20, background: '#F8FAFC', borderRadius: 16 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: 1 }}>Pay Rate</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--primary)' }}>${selectedJobDetails.pay_per_hour}/hr</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: 1 }}>Job Type</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.1rem', textTransform: 'capitalize' }}>{selectedJobDetails.job_type?.replace('_', ' ')}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: 1 }}>Experience</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.1rem', textTransform: 'capitalize' }}>{selectedJobDetails.experience_level}</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span style={{ fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: 1 }}>Duration</span>
+                  <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{selectedJobDetails.duration || 'Not specified'}</span>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 32 }}>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <FiFileText /> Job Description
+                </h3>
+                <p style={{ color: '#4B5563', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>
+                  {selectedJobDetails.description}
+                </p>
+              </div>
+
+              <div style={{ marginBottom: 32 }}>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <LuSparkles /> Required Skills
+                </h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {selectedJobDetails.required_skills?.map((skill, i) => (
+                    <span key={i} className="skill-tag" style={{ padding: '6px 14px', fontSize: '0.85rem' }}>{skill}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 24, borderTop: '1px solid #E5E7EB' }}>
+                <div style={{ color: '#6B7280', fontSize: '0.9rem' }}>
+                  <FiBell style={{ marginRight: 6 }} />
+                  Deadline: {selectedJobDetails.deadline ? new Date(selectedJobDetails.deadline).toLocaleDateString() : 'Open until filled'}
+                </div>
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button className="btn-secondary" onClick={() => setSelectedJobDetails(null)}>Close</button>
+                  {selectedJobDetails.has_applied ? (
+                    <button className="btn-primary" disabled style={{ background: '#E5E7EB', color: '#9CA3AF' }}>Already Applied</button>
+                  ) : (
+                    <button 
+                      className="btn-primary" 
+                      style={{ width: 'auto', padding: '12px 32px' }}
+                      onClick={() => {
+                        setApplyModal(selectedJobDetails);
+                        setSelectedJobDetails(null);
+                      }}
+                    >
+                      Apply for this job
+                    </button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 // ─── Job Card Component ─────────
-const JobCard = ({ job, onApply }) => (
+const JobCard = ({ job, onViewDetails, onApply }) => (
   <motion.div
     className="job-card"
-    whileHover={{ y: -4 }}
+    onClick={onViewDetails}
+    whileHover={{ y: -4, borderColor: 'var(--primary)', boxShadow: 'var(--shadow-md)' }}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
   >
@@ -1231,7 +1347,14 @@ const JobCard = ({ job, onApply }) => (
         {job.has_applied ? (
           <span className="job-status-badge badge-pending">Applied</span>
         ) : (
-          <button className="btn-primary" style={{ width: 'auto', padding: '8px 20px', fontSize: '0.85rem' }} onClick={onApply}>
+          <button 
+            className="btn-primary" 
+            style={{ width: 'auto', padding: '8px 20px', fontSize: '0.85rem' }} 
+            onClick={(e) => {
+              e.stopPropagation();
+              onApply(e);
+            }}
+          >
             Apply Now
           </button>
         )}
