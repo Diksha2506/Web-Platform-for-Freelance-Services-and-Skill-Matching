@@ -9,8 +9,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
 
-    # Serve the React frontend for all other paths
-    re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),
+    # React frontend (root and catch-all for routing)
+    path('', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^(?!static/).*$', TemplateView.as_view(template_name='index.html')),
 ]
 
 # Serve media files (safe)
