@@ -149,6 +149,7 @@ STATICFILES_DIRS = [
 import whitenoise
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 WHITENOISE_INDEX_FILE = True
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'frontend_build')
 
 # MEDIA
 MEDIA_URL = '/media/'
