@@ -160,14 +160,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # EMAIL (DEV)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# --- TEMP: AUTO RUN MIGRATIONS ON RENDER ---
-import sys
-if 'runserver' not in sys.argv:
-    try:
-        from django.core.management import call_command
-        # This will run migrations automatically whenever the app starts (gunicorn)
-        print("Auto-running migrations...")
-        call_command('migrate', interactive=False)
-    except Exception as e:
-        print(f"Migration error: {e}")
